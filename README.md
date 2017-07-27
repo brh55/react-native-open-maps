@@ -69,7 +69,7 @@ const openFacebookHQ = createOpenLink(facebookHQ);
 `react-native-open-maps` immediately opens the map of the coordinates and the settings
 
 #### `{ createOpenLink(options) }`
-Creates a delayed invoked function to open the map. This is useful binding functions to `onPress()` in a succinct manner. Think of it like ... `function openToMe() { open(coordinates) }`
+Creates a delayed invoked function to open the map. This is useful for binding functions to `onPress()` in a succinct manner. Think of it like ... `function openToMe() { open(coordinates) }`
 
 #### `{ createMapLink(options) }`
 Creates the raw link for the map.
