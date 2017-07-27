@@ -1,14 +1,51 @@
 {
   "name": "react-native-open-maps",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Open up the corresponding map application (Google or Apple Maps) from a set of coordinates (latitude & longitude)",
   "main": "index.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "react-native",
+    "maps",
+    "open link",
+    "apple maps",
+    "google maps"
+  ],
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brh55/react-native-open-maps.git"
+  },
+  "homepage": "https://github.com/brh55/react-native-open-maps#readme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brh55/react-native-open-maps/issues"
+  },
+  "author": "Brandon Him",
+  "devDependencies": {
+    "babel-jest": "^20.0.3",
+    "babel-preset-react-native": "^2.1.0",
+    "jest": "^20.0.4",
+    "jest-react-native": "^18.0.0",
+    "react": "^15.6.1",
+    "react-native": "^0.46.4"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "^0.45.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/",
+      "<rootDir>/__tests__/mocks/"
+    ]
+  }
 }
