@@ -48,7 +48,20 @@ const openYosemite = createOpenLink(yosemite);
 const openYosemiteZoomedOut = createOpenLink({ ...yosemite, zoom: 30 });
 
 const facebookHQ = { latitude: 37.4847, longitude: 122.1477 };
-const openFacebook = createOpenLink(facebookHQ);
+const openFacebookHQ = createOpenLink(facebookHQ);
+
+// Condensed for Readability...
+    render() {
+        return (
+          <Button
+            color={'#bdc3c7'}
+            onPress={openYosemite}
+            title="Go to Yosemite 🏔" />
+          <Button
+            color={'#bdc3c7'}
+            onPress={openFacebookHQ}
+            title="Go to Facebook HQ 🕋" />
+        );
 ```
 
 ## API
@@ -56,7 +69,7 @@ const openFacebook = createOpenLink(facebookHQ);
 `react-native-open-maps` immediately opens the map of the coordinates and the settings
 
 #### `{ createOpenLink(options) }`
-Creates a delayed invoked function to open the map. Think of it like ... `function openToMe() { open(coordinates) }`
+Creates a delayed invoked function to open the map. This is useful binding functions to `onPress()` in a succinct manner. Think of it like ... `function openToMe() { open(coordinates) }`
 
 #### `{ createMapLink(options) }`
 Creates the raw link for the map.
