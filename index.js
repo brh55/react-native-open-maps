@@ -1,7 +1,12 @@
 import React from 'react';
 import { Linking, Platform } from 'react-native';
 
-export default function createOpenLink({latitude, longitude, zoomLevel = 15, provider}) {
+export default function open({latitude, longitude, zoomLevel, provider}) {
+	// Execute link
+	createOpenLink({latitude, longitude, zoomLevel, provider})();
+}
+
+export function createOpenLink({latitude, longitude, zoomLevel = 15, provider}) {
 	if (!provider) {
 		defaultProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
 	}

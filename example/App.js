@@ -7,7 +7,7 @@ import {
 	Button
 } from 'react-native';
 
-import link from 'react-native-open-maps';
+import { createOpenLink } from 'react-native-open-maps';
 
 export default class example extends Component {
   render() {
@@ -18,7 +18,7 @@ export default class example extends Component {
       <Text style={styles.coordinates}>37.865101° N, -119.538330° W</Text>
       <Button
         color={'#bdc3c7'}
-        onPress={link({ latitude: 37.865101, longitude: -119.538330 })}
+        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330 })}
         title="Click To Open Maps 🗺" />
       </View>
     );
