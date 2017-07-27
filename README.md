@@ -29,11 +29,10 @@
       }
       
       render() {
-        const openToYosemite = ;
         return (
           <Button
             color={'#bdc3c7'}
-            onPress={_goToYosemite}
+            onPress={this._goToYosemite}
             title="Click To Open Maps 🗺" />
         );
       }
