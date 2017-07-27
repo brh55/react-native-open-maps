@@ -1,12 +1,12 @@
 # react-native-open-maps [![Travis](https://img.shields.io/travis/brh55/react-native-open-maps/master.svg?style=flat-square)](https://travis-ci.org/brh55/react-native-open-maps) [![David](https://img.shields.io/david/dev/brh55/react-native-open-maps.svg?style=flat-square)](https://david-dm.org/brh55/react-native-open-maps?type=dev) [![npm](https://img.shields.io/npm/dt/react-native-open-maps.svg?style=flat-square)](https://www.npmjs.com/package/react-native-open-maps)
 > 🗺 Open up the corresponding device map (Google or Apple Maps) from a set of coordinates (latitude &amp; longitude)
 
-![Demo Gif](http://g.recordit.co/RhkI4WISXT.gif)
-
 **Features**
 - ✅ Open the map coordinates immediately
 - ✅ Create a delayed invoked `function` that will open the map
 - ✅ Create a `string` of the map link
+
+![Demo Gif](http://g.recordit.co/RhkI4WISXT.gif)
 
 ## Usage
 1. Install the repository
