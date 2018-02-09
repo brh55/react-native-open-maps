@@ -12,7 +12,7 @@ test('Create proper links', () => {
 	// Google map link
 	expect(createMapLink({ ...options, provider: 'google' })).toEqual('http://maps.google.com/maps?q=10.02134,-29.21322&z=15');
 	// Apple map link
-	expect(createMapLink({ ...options, provider: 'apple' })).toEqual('http://maps.apple.com/?sll=10.02134,-29.21322&z=15');
+	expect(createMapLink({ ...options, provider: 'apple' })).toEqual('http://maps.apple.com/?q=10.02134,-29.21322&z=15');
 });
 
 test('Create a delayed function', () => {
