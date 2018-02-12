@@ -22,7 +22,7 @@ export function createOpenLink({latitude, longitude, zoomLevel = 15, provider}) 
 export function createMapLink({latitude, longitude, zoomLevel = 15, provider = 'google'}) {
 	const link = {
 		'google': `http://maps.google.com/maps?q=${latitude},${longitude}&z=${zoomLevel}`,
-		'apple': `http://maps.apple.com/?sll=${latitude},${longitude}&z=${zoomLevel}`
+		'apple': `http://maps.apple.com/?q=${latitude},${longitude}&z=${zoomLevel}`
 	};
 
 	return link[provider];
