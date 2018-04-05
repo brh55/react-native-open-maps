@@ -76,12 +76,13 @@ Creates the raw link for the map.
 #### options
 > 🔑 *Italicize indicates optional*
 
-| Properties | Type                              | Description                                                    | Example               |
-|------------|-----------------------------------|----------------------------------------------------------------|-----------------------|
-| latitude   | `number`                          | The latitude                                                   | 37.865101             |
-| longitude  | `number`                          | The longitude                                                  | -119.538330           |
-| *zoom*     | `number`                          | The zoom level                                                 | 18 <br> *Default: 15* |
-| *provider* | `string` <br> (`google` OR `apple`) | Overrides the corresponding map provider with the set provider | `apple`             
+| Properties | Type                                | Description                                                    | Example               |
+|------------|-------------------------------------|----------------------------------------------------------------|-----------------------|
+| latitude   | `number`                            | The latitude                                                   | 37.865101             |
+| longitude  | `number`                            | The longitude                                                  | -119.538330           |
+| *zoom*     | `number`                            | The zoom level                                                 | 18 <br> *Default: 15* |
+| *provider* | `string` <br> (`google` OR `apple`) | Overrides the corresponding map provider with the set provider | `apple`               |
+| *name*      | `string`                            | Provide a name to designate the pin on the map. Default: 'Pin' | `"Yosemite Trail"`    |
 
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)
