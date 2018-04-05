@@ -20,9 +20,10 @@ export function createOpenLink({latitude, longitude, zoomLevel = 15, name, provi
 }
 
 export function createMapLink({latitude, longitude, zoomLevel = 15, name = 'Pin', provider = 'google'}) {
+	let pinname = encodeURI(name);
 	const link = {
-		'google': `http://maps.google.com/maps?ll=${latitude},${longitude}&z=${zoomLevel}&q=${name}`,
-		'apple': `http://maps.apple.com/?ll=${latitude},${longitude}&z=${zoomLevel}&q=${name}`
+		'google': `http://maps.google.com/maps?ll=${latitude},${longitude}&z=${zoomLevel}&q=${pinname}`,
+		'apple': `http://maps.apple.com/?ll=${latitude},${longitude}&z=${zoomLevel}&q=${pinname}`
 	};
 
 	return link[provider];
