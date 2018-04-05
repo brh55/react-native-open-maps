@@ -19,7 +19,7 @@ export function createOpenLink({latitude, longitude, zoomLevel = 15, name, provi
 	return () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
 }
 
-export function createMapLink({latitude, longitude, zoomLevel = 15, name = null, provider = 'google'}) {
+export function createMapLink({latitude, longitude, zoomLevel = 15, name = '', provider = 'google'}) {
 	const link = {
 		'google': `http://maps.google.com/maps?ll=${latitude},${longitude}&z=${zoomLevel}&q=${name}`,
 		'apple': `http://maps.apple.com/?ll=${latitude},${longitude}&z=${zoomLevel}&q=${name}`
