@@ -87,7 +87,7 @@ Creates the raw link for the map.
 | longitude  | `number`                            | The longitude                                                  | -119.538330           |
 | *zoom*     | `number`                            | The zoom level                                                 | 18 <br> *Default: 15* |
 | *provider* | `string` <br> [`google`,`apple`,`googleDeepLink`] | Overrides the corresponding map provider with the set provider | `apple`               |
-| *query*      | `string`                            | Will act according to the map used. Refer to (query property)[#query-property)] | `"Yosemite Trail"`    |
+| *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
 
 ###### Query Property
 Behavior based on Platform:
