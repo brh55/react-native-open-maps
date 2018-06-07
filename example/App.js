@@ -23,7 +23,7 @@ export default class example extends Component {
 
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 40.765819, longitude: -73.975866, query: 'San Francisco'})}
+        onPress={createOpenLink({ latitude: 40.765819, longitude: -73.975866, query: 'San Francisco', zoomLevel: 4})}
         title="Go To San Francisco" />
 
       <Button
