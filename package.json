@@ -42,7 +42,6 @@
     "react-native": ">0.45.0"
   },
   "jest": {
-    "preset": "react-native",
     "modulePathIgnorePatterns": [
       "<rootDir>/example/",
       "<rootDir>/__tests__/mocks/"
