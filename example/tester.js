@@ -29,7 +29,7 @@ export function createMapLink({latitude, longitude, zoomLevel = 15, query, provi
 		link.google = link.google.concat('&', queryParam);
 		link.apple = link.apple.concat('&', queryParam);
 	} else {
-		link.google = link.google.concat('&', `q=${latitude}%2C${longitude}`)
+		link.google = link.google.concat('&', `q=${latitude},${longitude}`)
 	}
 
 	return encodeURI(link[provider]);
