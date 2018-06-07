@@ -5,7 +5,6 @@
 - ✅ Open the map coordinates immediately
 - ✅ Create a delayed invoked `function` that will open the map
 - ✅ Create a `string` of the map link
-- ✅ Support open of Google Maps on supported iOS devices
 
 ![Demo Gif](http://g.recordit.co/RhkI4WISXT.gif)
 
@@ -71,10 +70,6 @@ const openFacebookHQ = createOpenLink(facebookHQ);
 #### `{ createOpenLink(options) }`
 Creates a delayed invoked function to open the map. This is useful for binding functions to `onPress()` in a succinct manner. Think of it like ... `function openToMe() { open(coordinates) }`
 
-> Note:
-> 
-> If you set provider to `google` on a `iOS` detected device, `react-native-open-maps` will check to see if it supports the Google Maps App or fallback to Apple Maps.
-
 #### `{ createMapLink(options) }`
 Creates the raw link for the map.
 
@@ -86,14 +81,13 @@ Creates the raw link for the map.
 | latitude   | `number`                            | The latitude                                                   | 37.865101             |
 | longitude  | `number`                            | The longitude                                                  | -119.538330           |
 | *zoom*     | `number`                            | The zoom level                                                 | 18 <br> *Default: 15* |
-| *provider* | `string` <br> [`google`,`apple`,`googleDeepLink`] | Overrides the corresponding map provider with the set provider | `apple`               |
+| *provider* | `string` <br> [`google`,`apple`] | If no provider set, it will determine according to `Platform.OS` | `apple`               |
 | *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
 
 ###### Query Property
 Behavior based on Platform:
 - `Apple Maps`: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match.
-- `Google Maps`: Will override `latitude` and `longitude` and center map to closest query match.
-
+- `Google Maps`: Will override `latitude` and `longitude` and center map to closest query match. Without a `query`, Google will place a pin on the set `latitude` and `longitude`
 
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)
