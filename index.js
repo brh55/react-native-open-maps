@@ -1,9 +1,9 @@
 import React from 'react';
 import { Linking, Platform } from 'react-native';
 
-export default function open({latitude, longitude, zoomLevel, name, provider}) {
+export default function open({latitude, longitude, zoomLevel, query, provider}) {
 	// Execute link
-	createOpenLink({latitude, longitude, zoomLevel, name, provider})();
+  createOpenLink({ latitude, longitude, zoomLevel, query, provider})();
 }
 
 export function createOpenLink({latitude, longitude, zoomLevel = 15, query, provider}) {
