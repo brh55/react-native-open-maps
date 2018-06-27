@@ -25,11 +25,10 @@ export function createMapLink({latitude, longitude, zoomLevel = 15, query, provi
 	};
 
 	if (query) {
-		const queryParam = `q=${query}`;
-		link.google = link.google.concat('&', queryParam);
-		link.apple = link.apple.concat('&', queryParam);
+		link.google = link.google.concat(`&query=${query}`);
+		link.apple = link.apple.concat(`&q=${query}`);
 	} else {
-		link.google = link.google.concat('&', `q=${latitude},${longitude}`)
+		link.google = link.google.concat(`&query=${latitude},${longitude}`)
 	}
 
 	return encodeURI(link[provider]);
