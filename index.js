@@ -127,7 +127,10 @@ export function createMapLink({
 		apple: 'http://maps.apple.com/?'
 	};
 
-	if (params.start && params.end) {
+	// May consider center parameter for latitude and longitude
+	// and using the display action
+
+	if (params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 

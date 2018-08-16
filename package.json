@@ -1,7 +1,7 @@
 {
   "name": "react-native-open-maps",
-  "version": "0.2.2",
-  "description": "Open up the corresponding map application (Google or Apple Maps) from a set of coordinates (latitude & longitude)",
+  "version": "0.3.0-alpha.0",
+  "description": "A simple cross-platform library to help perform map actions to the corresponding device's map (Google or Apple Maps)",
   "main": "index.js",
   "directories": {
     "example": "example"
