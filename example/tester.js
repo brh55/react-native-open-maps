@@ -60,7 +60,7 @@ export const createGoogleParams = params => {
 	};
 
 	const map = {
-		query: params.coords,
+		query: params.coords || params.query,
 		origin: params.start,
 		destination: params.end,
 		travelmode: travelTypeMap[params.travelType],
@@ -84,9 +84,9 @@ export const createQueryParameters = ({
 
 	const formatArguments = {
 		coords: geoCordStringify(latitude, longitude),
-		start: encodeURI(start),
-		end: encodeURI(end),
-		query: encodeURI(query),
+		start,
+		end,
+		query,
 		travelType,
 		zoomLevel
 	}
@@ -118,32 +118,21 @@ export function createMapLink({
 	...params
 }) {
 	const queryParameters = createQueryParameters(params);
-	const appleQs = queryString.stringify(queryParameters.apple);
-	const googleQs = queryString.stringify(queryParameters.google);
+	// Escaped commas cause unusual error with Google map
+	const appleQs = queryString.stringify(queryParameters.apple).replace(/%2C/g, ',');
+	const googleQs = queryString.stringify(queryParameters.google).replace(/%2C/g, ',');
+
 	const link = {
-		google: 'https://www.google.com/maps/search/?api=1',
+		google: 'https://www.google.com/maps/search/?api=1&',
 		apple: 'http://maps.apple.com/?'
 	};
 
 	if (params.start && params.end) {
-		link.google = 'https://www.google.com/maps/dir/?api=1';
+		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
 	link.google += googleQs;
 	link.apple  += appleQs;
 
-	return encodeURI(link[provider]);
-	// const link = {
-	// 	'google': `https://www.google.com/maps/search/?api=1&zoom=${zoomLevel}`,
-	// 	'apple': `http://maps.apple.com/?ll=${geoCordinates}&z=${zoomLevel}`,
-	// };
-
-	// if (query) {
-	// 	link.google = link.google.concat(`&query=${query}`);
-	// 	link.apple = link.apple.concat(`&q=${query}`);
-	// } else {
-	// 	link.google = link.google.concat(`&query=${geoCordinates}`);
-	// }
-
-	// return encodeURI(link[provider]);
+	return link[provider];
 }
