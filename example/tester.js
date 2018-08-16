@@ -63,7 +63,7 @@ export const createGoogleParams = params => {
 		query: params.coords,
 		origin: params.start,
 		destination: params.end,
-		travelMode: travelTypeMap[params.travelType],
+		travelmode: travelTypeMap[params.travelType],
 		zoom: params.zoomLevel
 	};
 

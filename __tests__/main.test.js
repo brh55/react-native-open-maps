@@ -17,12 +17,12 @@ const options = {
 
 test('Stringify geocoordinates', () => {
 	expect(geoCordStringify(11.111,222.222)).toEqual('11.111,222.222');
-	expect(
+	expect(() => {
 		geoCordStringify(
 			'hello fellow developer',
-			'if you are reading this, you are a great always remember that!')
-		.toThrow('Entered a non-number value for geo coordinates.')
-	);
+			'if you are reading this, you are a great always remember that!'
+		)
+	}).toThrow();
 });
 
 const formattedParams = {
@@ -71,16 +71,17 @@ test('Create proper cross-platform query parameters', () => {
 	const baseExpected = {
 		apple: {
 			ll: '22.22,11.11',
-			z: parameters.zoomLevel,
+			z: base.zoomLevel,
 			dirflag: 'd'
 		},
 		google: {
 			query: '22.22,11.11',
-			zoom: parameters.zoomLevel,
+			zoom: base.zoomLevel,
+			travelmode: 'driving'
 		}
 	};
 
-	const actualOutput = createMapParameters(parameters);
+	const actualOutput = createQueryParameters(base);
 	expect(actualOutput.google).toMatchObject(baseExpected.google);
 	expect(actualOutput.apple).toMatchObject(baseExpected.apple);
 
@@ -99,17 +100,17 @@ test('Create proper cross-platform query parameters', () => {
 			...baseExpected.apple,
 			saddr: escapeStart,
 			daddr: escapeEnd,
-			dirflag: 'd',
+			dirflag: 'd'
 		},
 		google: {
 			...baseExpected.google,
 			origin: escapeStart,
 			destination: escapeEnd,
-			travelmode: 'drive'
+			travelmode: 'driving'
 		}
 	};
 
-	const directionOuput = createMapParameters(directionInput);
+	const directionOuput = createQueryParameters(directionInput);
 	expect(directionOuput).toMatchObject(expectedDirection);
 });
 
