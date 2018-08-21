@@ -11,25 +11,40 @@ import { createOpenLink } from './tester';
 
 export default class example extends Component {
   render() {
+	const start = 'SOHO, New York City, NY';
+	const end = 'Chinatown, New York City, NY';
+	const travelType = 'public_transport';
+
     return (
 	  <View style={styles.container}>
     	<Text style={styles.header}>Travel The World!</Text>
       <Text style={styles.emojis}>💪🏼🏔🌲</Text>
-      <Text style={styles.coordinates}>37.865101° N, -119.538330° W</Text>
+	  <Text style={styles.header}>Apple Maps</Text>
       <Button
         color={'#bdc3c7'}
         onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, query: 'Yosemite Trails' })}
-        title="Go To Yosemite 🗺" />
-
+        title="Open Yosemite" />
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 40.765819, longitude: -73.975866, query: 'San Francisco', zoomLevel: 4})}
-        title="Go To San Francisco" />
-
+        onPress={createOpenLink({ start, end, zoomLevel: 4})}
+        title="Directions (SOHO - Chinatown)" />
+	 <Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ travelType, end })}
+        title="Directions (Here - Chinatown)" />
+	<Text style={styles.header}>Google Maps</Text>
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 40.765819, longitude: -73.975866, provider: 'google', zoomLevel: 3})}
-        title="Open SF with Google Maps" />
+        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, provider: 'google', zoomLevel: 3})}
+        title="Display Yosemite" />
+	 <Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ travelType, start, end, provider: 'google' })}
+        title="Directions (SOHO - Chinatown)" />
+	<Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ travelType, end, provider: 'google' })}
+        title="Directions (Here - Chinatown)" />
       </View>
     );
   }

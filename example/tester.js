@@ -72,8 +72,8 @@ export const createGoogleParams = params => {
 
 // The map portion API is defined here essentially
 export const createQueryParameters = ({
-	latitude = 0,
-	longitude = 0,
+	latitude,
+	longitude,
 	zoomLevel = 15,
 	start = '',
 	end = '',
@@ -83,12 +83,15 @@ export const createQueryParameters = ({
 	validateTravelType(travelType);
 
 	const formatArguments = {
-		coords: geoCordStringify(latitude, longitude),
 		start,
 		end,
 		query,
 		travelType,
 		zoomLevel
+	}
+	
+	if (latitude && longitude) {
+		formatArguments.coords = geoCordStringify(latitude, longitude);
 	}
 
 	return {

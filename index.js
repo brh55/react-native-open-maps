@@ -72,8 +72,8 @@ export const createGoogleParams = params => {
 
 // The map portion API is defined here essentially
 export const createQueryParameters = ({
-	latitude = 0,
-	longitude = 0,
+	latitude,
+	longitude,
 	zoomLevel = 15,
 	start = '',
 	end = '',
@@ -83,12 +83,15 @@ export const createQueryParameters = ({
 	validateTravelType(travelType);
 
 	const formatArguments = {
-		coords: geoCordStringify(latitude, longitude),
 		start,
 		end,
 		query,
 		travelType,
 		zoomLevel
+	}
+	
+	if (latitude && longitude) {
+		formatArguments.coords = geoCordStringify(latitude, longitude);
 	}
 
 	return {
@@ -127,10 +130,7 @@ export function createMapLink({
 		apple: 'http://maps.apple.com/?'
 	};
 
-	// May consider center parameter for latitude and longitude
-	// and using the display action
-
-	if (params.end) {
+	if (params.start && params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
