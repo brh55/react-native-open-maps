@@ -3,6 +3,8 @@
 
 > 🗺 A simple cross-platform library to help perform map actions to the corresponding device's map (Google or Apple Maps)
 
+`react-native-open-maps` works by creating a deep link for either Apple maps or Google maps that can be used to open up the relevant map application. In order to maximize compatibility some platform specific parameters are omitted, but simplifies development efforts and ensures a smooth user experience.
+
 **Features**
 - ✅ Open the map coordinates immediately
 - ✅ Create a delayed invoked `function` that will open the map
