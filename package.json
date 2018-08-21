@@ -14,7 +14,9 @@
     "maps",
     "open link",
     "apple maps",
-    "google maps"
+    "google maps",
+    "map deep links",
+    "map url scheme"
   ],
   "files": [
     "index.js"
