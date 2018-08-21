@@ -107,3 +107,11 @@ The query behavior differs per platform:
 
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)
+
+## Shameless Plug 🔌
+If you like this repository, check out my other react-native projects or follow me for other open-source projects:
+
+- **[react-native-masonry](https://github.com/brh55/react-native-masonry)**: A pure JS react-native component to render a masonry~ish layout for images with support for dynamic columns, progressive image loading, device rotation, on-press handlers, and headers/captions.
+- **[react-native-hero](https://github.com/brh55/react-native-hero)**: A super duper easy hero unit react-native component with support for dynamic image, dynamic sizing, color overlays, and more
+- **[rn-component-cookbook](https://github.com/brh55/rn-component-cookbook)**: A open-source cookbook with recipes for handling everyday issues when building robust, modular react-native components
+- **[generator-rnc](https://github.com/brh55/generator-rnc)**: A yeoman generator to scaffold a ready-to-go, open-source react-native component (Jest, Package dependencies, Travis, etc)
