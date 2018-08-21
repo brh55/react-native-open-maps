@@ -85,7 +85,7 @@ Creates the raw link for the map.
 |------------|-------------------------------------|----------------------------------------------------------------|-----------------------|
 | *latitude*   | `number`                            | The latitude                                                   | 37.865101             |
 | *longitude*  | `number`                            | The longitude                                                  | -119.538330           |
-| *zoom*     | `number`                            | The zoom level                                                 | 18 <br> *Default: 15* |
+| *zoom*     | `number`                            | The zoom level, only works with `latitude` and `longitude`                                     | 18 <br> *Default: 15* |
 | *provider* | `string` <br> [`google`,`apple`] | If no provider set, it will determine according to `Platform.OS` | `apple`               |
 | *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
 | *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`] | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"` |
