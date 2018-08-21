@@ -97,13 +97,13 @@ Creates the raw link for the map.
 ### Map Actions
 To perform certain map actions refer these necessary parameters
 - **Setting Directions**: `end`,  [ *`start `*,  *`travelType`* ]
-- **Display Map Around Coordinates:** `latitude` **+** `longitude`
+- **Display Map Around Coordinates:** `latitude` **+** `longitude`, [ *`zoom`* ]
 - **Query Map For Location:** `query`
 
 ##### Query Property
 The query behavior differs per platform:
 - **Apple Maps**: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match.
-- **Google Maps**: Will override `latitude` and `longitude` and center map to closest query match. Without a `query`, Google will place a pin on the set `latitude` and `longitude`
+- **Google Maps**: Will override `latitude` and `longitude` if present and center map to closest query match. Without a `query`, you may however use `<latitude>,<longitude>` as a string value in the query to have a unnamed marker on the map.
 
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)

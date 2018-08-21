@@ -41,7 +41,7 @@ export const createAppleParams = params => {
 
 	const map = {
 		ll: params.coords,
-		z: params.zoomLevel,
+		z: params.zoom,
 		dirflag: travelTypeMap[params.travelType],
 		q: params.query,
 		saddr: params.start,
@@ -60,12 +60,17 @@ export const createGoogleParams = params => {
 	};
 
 	const map = {
-		query: params.coords || params.query,
 		origin: params.start,
 		destination: params.end,
 		travelmode: travelTypeMap[params.travelType],
-		zoom: params.zoomLevel
+		zoom: params.zoom
 	};
+
+	if (params.coords) {
+		map.center = params.coords
+	} else {
+		map.query =  params.query
+	}
 
 	return cleanObject(map);
 }
@@ -74,7 +79,7 @@ export const createGoogleParams = params => {
 export const createQueryParameters = ({
 	latitude,
 	longitude,
-	zoomLevel = 15,
+	zoom = 15,
 	start = '',
 	end = '',
 	query = '',
@@ -87,7 +92,7 @@ export const createQueryParameters = ({
 		end,
 		query,
 		travelType,
-		zoomLevel
+		zoom
 	}
 	
 	if (latitude && longitude) {
@@ -120,19 +125,26 @@ export function createMapLink({
 	provider = 'google',
 	...params
 }) {
-	const queryParameters = createQueryParameters(params);
-	// Escaped commas cause unusual error with Google map
-	const appleQs = queryString.stringify(queryParameters.apple).replace(/%2C/g, ',');
-	const googleQs = queryString.stringify(queryParameters.google).replace(/%2C/g, ',');
-
+	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
 		apple: 'http://maps.apple.com/?'
 	};
+	
+	// Display if lat and longitude is specified
+	if (params.latitude && params.longitude) {
+		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
+	}
 
+	// Directions if start and end is present
 	if (params.start && params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
+
+	const queryParameters = createQueryParameters(params);
+	// Escaped commas cause unusual error with Google map
+	const appleQs = queryString.stringify(queryParameters.apple).replace(/%2C/g, ',');
+	const googleQs = queryString.stringify(queryParameters.google).replace(/%2C/g, ',');
 
 	link.google += googleQs;
 	link.apple  += appleQs;

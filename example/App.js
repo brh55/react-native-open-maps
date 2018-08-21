@@ -22,11 +22,11 @@ export default class example extends Component {
 	  <Text style={styles.header}>Apple Maps</Text>
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, query: 'Yosemite Trails' })}
+        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, query: 'Yosemite Trails', zoom: 0 })}
         title="Open Yosemite" />
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ start, end, zoomLevel: 4})}
+        onPress={createOpenLink({ start, end, zoom: 20})}
         title="Directions (SOHO - Chinatown)" />
 	 <Button
         color={'#bdc3c7'}
@@ -35,7 +35,7 @@ export default class example extends Component {
 	<Text style={styles.header}>Google Maps</Text>
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, provider: 'google', zoomLevel: 3})}
+        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, provider: 'google', zoom: 10})}
         title="Display Yosemite" />
 	 <Button
         color={'#bdc3c7'}

@@ -12,7 +12,7 @@ const expectedQueryName = encodeURI(query);
 const options = {
 	latitude: 10.02134,
 	longitude: -29.21322,
-	zoom: 15,
+	zoom: 11,
 }
 
 test('Stringify geocoordinates', () => {
@@ -27,7 +27,7 @@ test('Stringify geocoordinates', () => {
 
 const formattedParams = {
 	coords: '11.11,22.222',
-	zoomLevel: 10,
+	zoom: 10,
 	travelType: 'drive'
 };
 
@@ -35,7 +35,7 @@ const formattedParams = {
 const formattedParams2 = {
 	query: 'New York City, New York, NY',
 	coords: '',
-	zoomLevel: 5,
+	zoom: 5,
 	travelType: 'walk',
 	end: '',
 	start: ''
@@ -64,19 +64,19 @@ test('Create proper query parameter mapping', () => {
 	const base = {
 		latitude: 22.22,
 		longitude: 11.11,
-		zoomLevel: 10,
+		zoom: 10,
 		travelType: 'drive'
 	};
 
 	const baseExpected = {
 		apple: {
 			ll: '22.22,11.11',
-			z: base.zoomLevel,
+			z: base.zoom,
 			dirflag: 'd'
 		},
 		google: {
-			query: '22.22,11.11',
-			zoom: base.zoomLevel,
+			center: '22.22,11.11',
+			zoom: base.zoom,
 			travelmode: 'driving'
 		}
 	};
@@ -113,19 +113,19 @@ test('Create proper query parameter mapping', () => {
 });
 
 test('Create proper links query links', () => {
-	// Google default link
+	// Google Display Link
 	expect(createMapLink(options))
 		.toEqual(
-			"https://www.google.com/maps/search/?api=1&query=10.02134,-29.21322&travelmode=driving&zoom=15"
+			"https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11"
 		);
 
 	// Google map link
 	expect(createMapLink({ ...options, provider: 'google', query }))
-		.toEqual("https://www.google.com/maps/search/?api=1&query=10.02134,-29.21322&travelmode=driving&zoom=15");
+		.toEqual("https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11");
 	
 	// Apple map link
 	expect(createMapLink({ ...options, provider: 'apple', query }))
-		.toEqual("http://maps.apple.com/?dirflag=d&ll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=15");
+		.toEqual("http://maps.apple.com/?dirflag=d&ll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=11");
 });
 
 test('Create proper direction links', () => {
@@ -133,12 +133,12 @@ test('Create proper direction links', () => {
 	const end = 'SOHO, New York, NY';
 
 	// Apple
-	expect(createMapLink({ ...options, provider: 'apple', start, end }))
-		.toEqual("http://maps.apple.com/?daddr=SOHO,%20New%20York,%20NY&dirflag=d&ll=10.02134,-29.21322&saddr=New%20York%20City,%20New%20York,%20NY&z=15");
+	expect(createMapLink({ provider: 'apple', start, end }))
+		.toEqual("http://maps.apple.com/?daddr=SOHO,%20New%20York,%20NY&dirflag=d&saddr=New%20York%20City,%20New%20York,%20NY&z=15");
 
 	// Google
-	expect(createMapLink({ ...options, provider: 'google', start, end }))
-		.toEqual("https://www.google.com/maps/dir/?api=1&destination=SOHO,%20New%20York,%20NY&origin=New%20York%20City,%20New%20York,%20NY&query=10.02134,-29.21322&travelmode=driving&zoom=15");
+	expect(createMapLink({ provider: 'google', start, end }))
+		.toEqual("https://www.google.com/maps/dir/?api=1&destination=SOHO,%20New%20York,%20NY&origin=New%20York%20City,%20New%20York,%20NY&travelmode=driving&zoom=15");
 });
 
 test('Create a delayed function', () => {
