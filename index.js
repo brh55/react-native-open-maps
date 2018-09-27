@@ -137,7 +137,7 @@ export function createMapLink({
 	}
 
 	// Directions if start and end is present
-	if (params.start && params.end) {
+	if (params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
