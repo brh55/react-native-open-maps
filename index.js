@@ -42,7 +42,7 @@ export const createAppleParams = params => {
 	const map = {
 		ll: params.coords,
 		z: params.zoom,
-		dirflag: travelTypeMap[params.travelType],
+		dirflg: travelTypeMap[params.travelType],
 		q: params.query,
 		saddr: params.start,
 		daddr: params.end
