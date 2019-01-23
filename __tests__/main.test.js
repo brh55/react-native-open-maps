@@ -46,7 +46,7 @@ test('Create apple params', () => {
 		createAppleParams(formattedParams)
 	).toMatchObject({
 		z: 10,
-		dirflag: 'd',
+		dirflg: 'd',
 		ll: '11.11,22.222'
 	});
 	
@@ -56,7 +56,7 @@ test('Create apple params', () => {
 	.toMatchObject({
 		q: 'New York City, New York, NY',
 		z: 5,
-		dirflag: 'w',
+		dirflg: 'w',
 	});
 });
 
@@ -72,7 +72,7 @@ test('Create proper query parameter mapping', () => {
 		apple: {
 			ll: '22.22,11.11',
 			z: base.zoom,
-			dirflag: 'd'
+			dirflg: 'd'
 		},
 		google: {
 			center: '22.22,11.11',
@@ -98,7 +98,7 @@ test('Create proper query parameter mapping', () => {
 			...baseExpected.apple,
 			saddr: directions.start,
 			daddr: directions.end,
-			dirflag: 'd'
+			dirflg: 'd'
 		},
 		google: {
 			...baseExpected.google,
@@ -125,7 +125,7 @@ test('Create proper links query links', () => {
 	
 	// Apple map link
 	expect(createMapLink({ ...options, provider: 'apple', query }))
-		.toEqual("http://maps.apple.com/?dirflag=d&ll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=11");
+		.toEqual("http://maps.apple.com/?dirflg=d&ll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=11");
 });
 
 test('Create proper direction links', () => {
@@ -134,7 +134,7 @@ test('Create proper direction links', () => {
 
 	// Apple
 	expect(createMapLink({ provider: 'apple', start, end }))
-		.toEqual("http://maps.apple.com/?daddr=SOHO,%20New%20York,%20NY&dirflag=d&saddr=New%20York%20City,%20New%20York,%20NY&z=15");
+		.toEqual("http://maps.apple.com/?daddr=SOHO,%20New%20York,%20NY&dirflg=d&saddr=New%20York%20City,%20New%20York,%20NY&z=15");
 
 	// Google
 	expect(createMapLink({ provider: 'google', start, end }))

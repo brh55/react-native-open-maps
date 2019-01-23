@@ -42,7 +42,7 @@ export const createAppleParams = params => {
 	const map = {
 		ll: params.coords,
 		z: params.zoom,
-		dirflag: travelTypeMap[params.travelType],
+		dirflg: travelTypeMap[params.travelType],
 		q: params.query,
 		saddr: params.start,
 		daddr: params.end
@@ -67,9 +67,9 @@ export const createGoogleParams = params => {
 	};
 
 	if (params.coords) {
-		map.center = params.coords
+		map.center = params.coords;
 	} else {
-		map.query =  params.query
+		map.query = params.query;
 	}
 
 	return cleanObject(map);
@@ -137,7 +137,7 @@ export function createMapLink({
 	}
 
 	// Directions if start and end is present
-	if (params.start && params.end) {
+	if (params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
