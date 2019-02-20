@@ -89,8 +89,8 @@ Creates the raw link for the map.
 | *provider* | `string` <br> [`google`,`apple`] | If no provider set, it will determine according to `Platform.OS` | `apple`               |
 | *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
 | *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`] | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"` |
-| *start* | `string` that geolocation can understand | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". | `"New York City, New York, NY"` |
-| *end* | `string` that geolocation can understand. | The end location that can be interpreted as a gelocation. | `"SOHO, New York, NY"` |
+| *start* | `string` that geolocation can understand | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1) and [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) docs for more details on how to define geolocations. | `"New York City, New York, NY"` |
+| *end* | `string` that geolocation can understand. | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1) and [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) docs for more details on how to define geolocations. | `"SOHO, New York, NY"` |
 
 **Note:** Combining query with latitude and longitude will override the query parameter.
 
