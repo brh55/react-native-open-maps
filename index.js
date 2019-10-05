@@ -155,8 +155,7 @@ export function createMapLink({
 
 	// throw an error to the developer
 	if (params.start && params.navigate_mode === 'navigate') {
-		// alternative: delete params['start']; console.warn("navigate_mode='navigate' only supports 'end' prop")
-		throw new Error("navigate_mode='navigate' only supports 'end' prop")
+		console.warn("navigate_mode='navigate' only supports 'end' prop")
 	}
 
 	const queryParameters = createQueryParameters(params);
