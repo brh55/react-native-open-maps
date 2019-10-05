@@ -66,6 +66,10 @@ export const createGoogleParams = params => {
 		zoom: params.zoom
 	};
 
+	if (params.navigate_mode === 'navigate') {
+		map.dir_action = 'navigate'
+	}
+
 	if (params.coords) {
 		map.center = params.coords;
 	} else {
@@ -83,6 +87,7 @@ export const createQueryParameters = ({
 	start = '',
 	end = '',
 	query = '',
+	navigate_mode = 'preview', // preview has always being the default mode
 	travelType = 'drive'
 }) => {
 	validateTravelType(travelType);
@@ -91,6 +96,7 @@ export const createQueryParameters = ({
 		start,
 		end,
 		query,
+		navigate_mode,
 		travelType,
 		zoom
 	}
@@ -134,11 +140,23 @@ export function createMapLink({
 	// Display if lat and longitude is specified
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
+
+		// if navigate_mode is navigate with latlng params
+		if (params.navigate_mode === 'navigate') {
+			console.warn("navigate_mode='navigate' only supports 'end' prop")
+			params['navigate_mode'] = 'preview';
+		}
 	}
 
 	// Directions if start and end is present
 	if (params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
+	}
+
+	// throw an error to the developer
+	if (params.start && params.navigate_mode === 'navigate') {
+		// alternative: delete params['start']; console.warn("navigate_mode='navigate' only supports 'end' prop")
+		throw new Error("navigate_mode='navigate' only supports 'end' prop")
 	}
 
 	const queryParameters = createQueryParameters(params);
