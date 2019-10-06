@@ -93,7 +93,8 @@ Creates the raw link for the map.
 | *end* | `string` that geolocation can understand. | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1) and [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) docs for more details on how to define geolocations. | `"SOHO, New York, NY"` |
 | *navigate_mode* | `string` <br> [`preview`,`navigate`] | Determines whether map should open in preview mode or in navigate mode (with turn-by-turn navigation). <br> This parameter only works in conjunction with `end`. Platform map uses current location as `start` parameter | `"navigate"` <br> *default: `"preview"`* |
 
-**Note:** Combining query with latitude and longitude will override the query parameter.
+**Note 1:** Combining query with latitude and longitude will override the query parameter.
+**Note 2:** To use google maps on iOS, declare the URL scheme used by the API in your Info.plist file. Follow the step [here](https://developers.google.com/maps/documentation/ios-sdk/start#step_6_declare_the_url_schemes_used_by_the_api)
 
 ### Map Actions
 To perform certain map actions refer these necessary parameters
