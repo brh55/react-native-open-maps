@@ -115,13 +115,31 @@ export default function open(params) {
 	createOpenLink(params)();
 }
 
-export function createOpenLink({ provider, ...params }) {
+export async function createOpenLink({ provider, ...params }) {
 	// Returns a delayed async function that opens when executed
+	let mapProvider = provider;
 	if (!provider) {
-		defaultProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
-	}
+		// use default provider
+		mapProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
+	} else {
 
-	let mapProvider = provider || defaultProvider;
+		if (Platform.OS === 'ios' && provider === 'google') {
+			// Device is iOS with google maps as provider
+			try {
+				// check that device can open google maps. Else default to apple maps
+				const canOpen = await Linking.canOpenURL('comgooglemaps://?center=40.765819,-73.975866');
+				if (canOpen) { 
+					mapProvider =  'google'
+				} else { 
+					mapProvider = 'apple'
+					console.warn('Cannot open google maps. Falling back to apple maps'); 
+				}
+			} catch (error) {
+				mapProvider = 'apple'
+				console.warn('open google maps error: ', error)
+			}
+
+	}
 	// Allow override provider, otherwise use the default provider
 	const mapLink = createMapLink({ provider: mapProvider, ...params });
 	return async () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
