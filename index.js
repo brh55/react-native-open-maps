@@ -131,7 +131,7 @@ export async function createOpenLink({ provider, ...params }) {
 				if (canOpen) { 
 					mapProvider = 'google'
 				} else { 
-					throw new Error('Cannot open google maps. Falling back to apple mapsy');
+					throw new Error('Cannot open google maps. Falling back to apple maps');
 				}
 			} catch (error) {
 				mapProvider = 'apple'
