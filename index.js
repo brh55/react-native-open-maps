@@ -112,7 +112,8 @@ export const createQueryParameters = ({
 };
 
 export default function open(params) {
-	createOpenLink(params)();
+	// using a promise to create & execute a delayed function
+	new Promise((resolve, _) => resolve(createOpenLink(params))() )
 }
 
 export async function createOpenLink({ provider, ...params }) {
@@ -129,21 +130,19 @@ export async function createOpenLink({ provider, ...params }) {
 				// check that device can open google maps. Else default to apple maps
 				const canOpen = await Linking.canOpenURL('comgooglemaps://?center=40.765819,-73.975866');
 				if (canOpen) { 
-					mapProvider =  'google'
+					mapProvider = 'google'
 				} else { 
-					mapProvider = 'apple'
-					console.warn('Cannot open google maps. Falling back to apple maps'); 
+					throw new Error('Cannot open google maps. Falling back to apple mapsy');
 				}
 			} catch (error) {
 				mapProvider = 'apple'
 				console.warn('open google maps error: ', error)
 			}
 		}
-
 	}
 	// Allow override provider, otherwise use the default provider
 	const mapLink = createMapLink({ provider: mapProvider, ...params });
-	return async () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
+	return Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
 }
 
 export function createMapLink({
