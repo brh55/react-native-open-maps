@@ -112,8 +112,7 @@ export const createQueryParameters = ({
 };
 
 export default function open(params) {
-	// using a promise to create & execute a delayed function
-	new Promise((resolve, _) => resolve(createOpenLink(params))() )
+	createOpenLink(params) //()
 }
 
 export async function createOpenLink({ provider, ...params }) {
@@ -142,7 +141,7 @@ export async function createOpenLink({ provider, ...params }) {
 	}
 	// Allow override provider, otherwise use the default provider
 	const mapLink = createMapLink({ provider: mapProvider, ...params });
-	return Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
+	return await Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
 }
 
 export function createMapLink({
