@@ -138,6 +138,7 @@ export async function createOpenLink({ provider, ...params }) {
 				mapProvider = 'apple'
 				console.warn('open google maps error: ', error)
 			}
+		}
 
 	}
 	// Allow override provider, otherwise use the default provider
