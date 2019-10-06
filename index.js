@@ -131,11 +131,11 @@ export async function createOpenLink({ provider, ...params }) {
 				if (canOpen) { 
 					mapProvider = 'google'
 				} else { 
-					throw new Error('Cannot open google maps. Falling back to apple maps');
+					throw new Error('Cannot open google maps, falling back to apple maps');
 				}
 			} catch (error) {
 				mapProvider = 'apple'
-				console.warn('open google maps error: ', error)
+				console.warn('Open google maps error: ', error)
 			}
 		}
 	}
