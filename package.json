@@ -1,6 +1,6 @@
 {
   "name": "react-native-open-maps",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A simple react-native library to perform cross-platform map actions (Google or Apple Maps)",
   "main": "index.js",
   "directories": {
