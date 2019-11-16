@@ -119,14 +119,12 @@ export function createOpenLink({ provider, ...params }) {
 	// Returns a delayed async function that opens when executed
 	return async () => {
 		let mapProvider = provider;
-		if (!provider) {
-			// use default provider
+		if (!provider) { // use default provider
 			mapProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
 		} else {
 			if (Platform.OS === 'ios' && provider === 'google') {
 				// Device is iOS with google maps as provider
-				try {
-					// check that device can open google maps.
+				try { // check that device can open google maps.
 					const canOpen = await Linking.canOpenURL('comgooglemaps://?center=40.765819,-73.975866');
 					if (!canOpen) { 
 						throw new Error('cannot open google maps, falling back to apple maps');
