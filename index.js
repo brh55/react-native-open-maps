@@ -112,7 +112,7 @@ export const createQueryParameters = ({
 };
 
 export default function open(params) {
-	createOpenLink(params)()
+	createOpenLink(params)();
 }
 
 export function createOpenLink({ provider, ...params }) {
