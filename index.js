@@ -117,11 +117,10 @@ export default function open(params) {
 
 export function createOpenLink({ provider, ...params }) {
 	// Returns a delayed async function that opens when executed
+	let mapProvider = provider;
 	if (!provider) {
-		defaultProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
+		mapProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
 	}
-
-	let mapProvider = provider || defaultProvider;
 	// Allow override provider, otherwise use the default provider
 	const mapLink = createMapLink({ provider: mapProvider, ...params });
 	return async () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
