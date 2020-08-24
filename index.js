@@ -77,7 +77,7 @@ export const createGoogleParams = params => {
 		map.query = params.query;
 		map.query_place_id = params.query_place_id;
 	}
-	
+
 	return cleanObject(map);
 }
 
