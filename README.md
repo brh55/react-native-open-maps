@@ -64,7 +64,7 @@ const openFacebookHQ = createOpenLink(facebookHQ);
           <Button
             color={'#bdc3c7'}
             onPress={openFacebookHQ}
-            title="Go to Facebook HQ 🕋" />
+            title="Go to Facebook HQ" />
         );
 ```
 
