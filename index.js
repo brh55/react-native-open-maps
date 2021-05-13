@@ -62,6 +62,7 @@ export const createGoogleParams = params => {
 	const map = {
 		origin: params.start,
 		destination: params.end,
+		destination_place_id: params.end_place_id,
 		travelmode: travelTypeMap[params.travelType],
 		zoom: params.zoom
 	};
@@ -74,6 +75,7 @@ export const createGoogleParams = params => {
 		map.center = params.coords;
 	} else {
 		map.query = params.query;
+		map.query_place_id = params.query_place_id;
 	}
 
 	return cleanObject(map);
@@ -86,7 +88,9 @@ export const createQueryParameters = ({
 	zoom = 15,
 	start = '',
 	end = '',
+	end_place_id = '',
 	query = '',
+	query_place_id = '',
 	navigate_mode = 'preview', // preview has always being the default mode
 	travelType = 'drive'
 }) => {
@@ -95,7 +99,9 @@ export const createQueryParameters = ({
 	const formatArguments = {
 		start,
 		end,
+		end_place_id,
 		query,
+		query_place_id,
 		navigate_mode,
 		travelType,
 		zoom
