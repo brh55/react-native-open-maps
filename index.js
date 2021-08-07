@@ -84,23 +84,33 @@ export const createGoogleParams = params => {
 // create Yandex params
 export const createYandexParams = params => {
 	const travelTypeMap = {
-	  drive: 'auto',
-	  walk: 'pd',
-	  public_transport: 'mt'
+	  	drive: 'auto',
+	  	walk: 'pd',
+	  	public_transport: 'mt'
 	};
 
 	const map = {
-	  z: params.zoom,
-	  rtt: travelTypeMap[params.travelType],
-	  // yandex url scheme requires reversed coords
-	  ll: geoCoordsStringify(params.longitude, params.latitude),
-	  pt: geoCoordsStringify(params.longitude, params.latitude),
-	  oid: params.query_place_id,
-	  text: params.query
+	  	z: params.zoom,
+	  	rtt: travelTypeMap[params.travelType],
+	  	// yandex url scheme requires reversed coords
+	  	ll: geoCoordsStringify(params.longitude, params.latitude),
+	  	pt: geoCoordsStringify(params.longitude, params.latitude),
+	  	oid: params.query_place_id,
+	  	text: params.query
 	};
 
 	if (params.start && params.end) {
-	  map.rtext = `${params.start}~${params.end}`;
+	  	map.rtext = `${params.start}~${params.end}`;
+	}
+
+	if (params.start && !params.end) {
+	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
+	  	map.rtext = `${params.start}`;
+	}
+
+	if (params.end && !params.start) {
+  	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
+	  	map.rtext = `${params.end}`;
 	}
 
 	return cleanObject(map);
