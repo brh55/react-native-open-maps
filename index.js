@@ -106,7 +106,7 @@ export const createQueryParameters = ({
 		travelType,
 		zoom
 	}
-	
+
 	if (latitude && longitude) {
 		formatArguments.coords = geoCordStringify(latitude, longitude);
 	}
@@ -140,9 +140,9 @@ export function createMapLink({
 	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
-		apple: 'http://maps.apple.com/?'
+		apple: (Platform.OS === 'ios') ? 'maps://?' : 'http://maps.apple.com/?'
 	};
-	
+
 	// Display if lat and longitude is specified
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
