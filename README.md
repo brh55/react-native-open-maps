@@ -79,22 +79,24 @@ Creates a delayed invoked function to open the map. This is useful for binding f
 Creates the raw link for the map.
 
 #### options
-> 🔑 *Italicize indicates optional*
+| Properties   | Type                                                   | Description                                                  | Example                         | Map Support |
+| ------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------- | ----------- |
+| *latitude*   | `number`                                               | The latitude                                                 | 37.865101                       | All         |
+| *longitude*  | `number`                                               | The longitude                                                | -119.538330                     | All         |
+| *zoom*       | `number`                                               | The zoom level, only works with `latitude` and `longitude`   | 18 <br> *Default: 15*           | All         |
+| *provider*   | `string` <br> [`google`,`apple`]                       | If no provider set, it will determine according to `Platform.OS` | `apple`                         | N/A         |
+| *query*      | `string`                                               | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`              | All         |
+| *queryPlaceId* | `string`                                               | Will query by Place ID.                                      | `ChIJgUbEo8cfqokR5lP9_Wh_DaM`   | Google      |
+| *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`]   | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"`                       | All         |
+| *start*      | `string` that geolocation can understand               | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"New York City, New York, NY"` | All         |
+| *end*        | `string` that geolocation can understand.              | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"SOHO, New York, NY"`          | All         |
+| *endPlaceId* | `string`                                               | End destination with the use of a place ID that uniquely identifies a places. | `ChIJgUbEo8cfqokR5lP9_Wh_DaM`   | Google      |
+| *navigate*   | `boolean`                                              | Note, this is only specific for Google. Yandex and Apple maps will provide directions if a `start ` and `end` is provided. | `true`                          | Google      |
+| *mapType*    | `enum`: [`standard`, `satellite`, `hybrid`, `transit`] | Specifies base map type. Note, `hybrid` is the satellite map with a transit layer, where as `transit` is the standard roadmap with a `transit` layer. | "hybrid"                        | All. Yandex does not support "hybrid"        |
 
-| Properties | Type                                | Description                                                    | Example               |
-|------------|-------------------------------------|----------------------------------------------------------------|-----------------------|
-| *latitude*   | `number`                            | The latitude                                                   | 37.865101             |
-| *longitude*  | `number`                            | The longitude                                                  | -119.538330           |
-| *zoom*     | `number`                            | The zoom level, only works with `latitude` and `longitude`                                     | 18 <br> *Default: 15* |
-| *provider* | `string` <br> [`google`,`apple`] | If no provider set, it will determine according to `Platform.OS` | `apple`               |
-| *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
-| *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`] | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"` |
-| *start* | `string` that geolocation can understand | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"New York City, New York, NY"` |
-| *end* | `string` that geolocation can understand. | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"SOHO, New York, NY"` |
-| *navigate_mode* | `string` <br> [`preview`,`navigate`] | Determines whether map should open in preview mode or in navigate mode (with turn-by-turn navigation). <br> This parameter only works in conjunction with `end`. Platform map uses current location as `start` parameter | `"navigate"` <br> *default: `"preview"`* |
-
-**Note:** Combining query with latitude and longitude will override the query parameter.
-**Note:** Yandex Maps does not support building routes from current location.
+**Note:** 
+- Combining query with latitude and longitude will override the query parameter.
+- Yandex Maps does not support building routes from current location.
 
 ### Map Actions
 To perform certain map actions refer these necessary parameters
