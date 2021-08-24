@@ -62,12 +62,12 @@ export const createGoogleParams = params => {
 	const map = {
 		origin: params.start,
 		destination: params.end,
-		destination_place_id: params.end_place_id,
+		destination_place_id: params.endPlaceId,
 		travelmode: travelTypeMap[params.travelType],
 		zoom: params.zoom
 	};
 
-	if (params.navigate_mode === 'navigate') {
+	if (params.navigateMode === 'navigate') {
 		map.dir_action = 'navigate'
 	}
 
@@ -75,7 +75,7 @@ export const createGoogleParams = params => {
 		map.center = geoCordStringify(params.latitude, params.longitude);
 	} else {
 		map.query = params.query;
-		map.query_place_id = params.query_place_id;
+		map.query_place_id = params.queryPlaceId;
 	}
 
 	return cleanObject(map);
@@ -95,7 +95,7 @@ export const createYandexParams = params => {
 	  	// yandex url scheme requires reversed coords
 	  	ll: geoCoordsStringify(params.longitude, params.latitude),
 	  	pt: geoCoordsStringify(params.longitude, params.latitude),
-	  	oid: params.query_place_id,
+	  	oid: params.queryPlaceId,
 	  	text: params.query
 	};
 
@@ -123,10 +123,10 @@ export const createQueryParameters = ({
 	zoom = 15,
 	start = '',
 	end = '',
-	end_place_id = '',
+	endPlaceId = '',
 	query = '',
-	query_place_id = '',
-	navigate_mode = 'preview', // preview has always being the default mode
+	queryPlaceId = '',
+	navigateMode = 'preview', // preview has always being the default mode
 	travelType = 'drive'
 }) => {
 	validateTravelType(travelType);
@@ -134,10 +134,10 @@ export const createQueryParameters = ({
 	const formatArguments = {
 		start,
 		end,
-		end_place_id,
+		endPlaceId,
 		query,
-		query_place_id,
-		navigate_mode,
+		queryPlaceId,
+		navigateMode,
 		travelType,
 		zoom
 	}
@@ -182,10 +182,10 @@ export function createMapLink({
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
 
-		// if navigate_mode is navigate with latlng params
-		if (params.navigate_mode === 'navigate') {
-			console.warn("navigate_mode='navigate' only supports 'end' prop")
-			params['navigate_mode'] = 'preview';
+		// if navigateMode is navigate with latlng params
+		if (params.navigateMode === 'navigate') {
+			console.warn("navigateMode='navigate' only supports 'end' prop")
+			params.navigateMode = 'preview';
 		}
 	}
 
@@ -195,8 +195,8 @@ export function createMapLink({
 	}
 
 	// throw an error to the developer
-	if (params.start && params.navigate_mode === 'navigate') {
-		console.warn("navigate_mode='navigate' only supports 'end' prop")
+	if (params.start && params.navigateMode === 'navigate') {
+		console.warn("navigateMode='navigate' only supports 'end' prop")
 	}
 
 	const queryParameters = createQueryParameters(params);
