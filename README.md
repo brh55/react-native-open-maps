@@ -11,7 +11,7 @@
 - ✅ Create a `string` of the map link
 - Cross-compatible properties among different map applications
 
-![Demo Gif](http://g.recordit.co/RhkI4WISXT.gif)
+![New Demo Preview](http://g.recordit.co/0IPl516Adc.gif)
 
 ## Usage
 1. Install the repository
@@ -67,6 +67,8 @@ const openFacebookHQ = createOpenLink(facebookHQ);
             title="Go to Facebook HQ 🕋" />
         );
 ```
+
+If you need additional examples, view the example directory for a demo you can run locally.
 
 ## API
 #### default function `open(options)`
