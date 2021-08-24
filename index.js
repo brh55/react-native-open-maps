@@ -1,4 +1,3 @@
-import React from 'react';
 import { Linking, Platform } from 'react-native';
 import queryString from 'query-string';
 
@@ -48,7 +47,7 @@ export const createAppleParams = params => {
 	}
 
 	const map = {
-		ll: geoCordStringify(params.latitude, params.longitude),
+		ll: params.coords,
 		z: params.zoom,
 		dirflg: travelTypeMap[params.travelType] || travelTypeMap['drive'],
 		q: params.query,
@@ -93,7 +92,7 @@ export const createGoogleParams = params => {
 	}
 
 	if (params.coords) {
-		map.center = geoCordStringify(params.latitude, params.longitude);
+		map.center = params.coords;
 	} else {
 		map.query = params.query;
 		map.query_place_id = params.queryPlaceId;
@@ -120,8 +119,8 @@ export const createYandexParams = params => {
 	  	z: params.zoom,
 	  	rtt: travelTypeMap[params.travelType],
 	  	// yandex url scheme requires reversed coords
-	  	ll: geoCoordsStringify(params.longitude, params.latitude),
-	  	pt: geoCoordsStringify(params.longitude, params.latitude),
+	  	ll: params.reverseCoords,
+	  	pt: params.reverseCoords,
 	  	oid: params.queryPlaceId,
 	  	text: params.query,
 		l: baseTypeMap[params.mapType] || baseTypeMap['standard']
@@ -145,7 +144,7 @@ export const createYandexParams = params => {
   };
 
 // The map portion API is defined here essentially
-export const createQueryParameters = ({
+export const createQueryParameters = (provider, {
 	latitude,
 	longitude,
 	zoom = 15,
@@ -174,13 +173,16 @@ export const createQueryParameters = ({
 
 	if (latitude && longitude) {
 		formatArguments.coords = geoCordStringify(latitude, longitude);
+		formatArguments.reverseCoords = geoCordStringify(longitude, latitude);
 	}
 
-	return {
-		apple: createAppleParams(formatArguments),
-		google: createGoogleParams(formatArguments),
-		yandex: createYandexParams(formatArguments)
-	}
+	const generateParameters = {
+		apple: createAppleParams,
+		google: createGoogleParams,
+		yandex: createYandexParams,
+	}[provider];
+
+	return generateParameters(formatArguments);
 };
 
 export default function open(params) {
@@ -212,7 +214,7 @@ export function createMapLink({
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
 
-		// if navigate is navigate with latlng params
+		// if navigate is navigate with lat and lng params
 		if (params.navigate === true) {
 			console.warn("Expected 'end' parameter in navigation, defaulting to preview mode.");
 			params.navigate = false;
@@ -224,15 +226,7 @@ export function createMapLink({
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
-	const queryParameters = createQueryParameters(params);
+	const queryParameters = createQueryParameters(provider, params);
 	// Escaped commas cause unusual error with Google map
-	const appleQs = queryString.stringify(queryParameters.apple).replace(/%2C/g, ',');
-	const googleQs = queryString.stringify(queryParameters.google).replace(/%2C/g, ',');
-	const yandexQs = queryString.stringify(queryParameters.yandex).replace(/%2C/g, ',');
-
-	link.google += googleQs;
-	link.apple  += appleQs;
-	link.yandex += yandexQs;
-
-	return link[provider];
+	return link[provider] + queryString.stringify(queryParameters[provider]).replace(/%2C/g, ',');
 }
