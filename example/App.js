@@ -22,7 +22,7 @@ import {
 
 import {
   createOpenLink
-} from 'react-native-open-maps';
+} from './localTest';
 
 const DemoContent = (): Node => {
   const start = 'SOHO, New York City, NY';
