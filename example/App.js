@@ -35,7 +35,7 @@ export default class example extends Component {
 	<Text style={styles.header}>Google Maps</Text>
       <Button
         color={'#bdc3c7'}
-        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, provider: 'google', zoom: 10})}
+        onPress={createOpenLink({ latitude: 37.865101, longitude: -119.538330, provider: 'google', zoom: 10 })}
         title="Display Yosemite" />
 	 <Button
         color={'#bdc3c7'}
@@ -45,6 +45,19 @@ export default class example extends Component {
         color={'#bdc3c7'}
         onPress={createOpenLink({ travelType, end, provider: 'google' })}
         title="Directions (Here - Chinatown)" />
+	<Text style={styles.header}>Yandex Maps</Text>
+      <Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ provider: 'yandex', latitude: 53.882847, longitude: 27.727503, zoom: 12, travelType })}
+        title="Display Minsk" />
+      <Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ provider: 'yandex', start, end, travelType })}
+        title="Directions (SOHO - Chinatown)" />
+      <Button
+        color={'#bdc3c7'}
+        onPress={createOpenLink({ provider: 'yandex', query: 'Cafe', zoom: 15 })}
+        title="Find the nearest cafe" />
       </View>
     );
   }

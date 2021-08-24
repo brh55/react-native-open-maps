@@ -40,7 +40,7 @@ export const createAppleParams = params => {
 	};
 
 	const map = {
-		ll: params.coords,
+		ll: geoCordStringify(params.latitude, params.longitude),
 		z: params.zoom,
 		dirflg: travelTypeMap[params.travelType],
 		q: params.query,
@@ -72,7 +72,7 @@ export const createGoogleParams = params => {
 	}
 
 	if (params.coords) {
-		map.center = params.coords;
+		map.center = geoCordStringify(params.latitude, params.longitude);
 	} else {
 		map.query = params.query;
 		map.query_place_id = params.query_place_id;
@@ -80,6 +80,41 @@ export const createGoogleParams = params => {
 
 	return cleanObject(map);
 }
+
+// create Yandex params
+export const createYandexParams = params => {
+	const travelTypeMap = {
+	  	drive: 'auto',
+	  	walk: 'pd',
+	  	public_transport: 'mt'
+	};
+
+	const map = {
+	  	z: params.zoom,
+	  	rtt: travelTypeMap[params.travelType],
+	  	// yandex url scheme requires reversed coords
+	  	ll: geoCoordsStringify(params.longitude, params.latitude),
+	  	pt: geoCoordsStringify(params.longitude, params.latitude),
+	  	oid: params.query_place_id,
+	  	text: params.query
+	};
+
+	if (params.start && params.end) {
+	  	map.rtext = `${params.start}~${params.end}`;
+	}
+
+	if (params.start && !params.end) {
+	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
+	  	map.rtext = `${params.start}`;
+	}
+
+	if (params.end && !params.start) {
+  	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
+	  	map.rtext = `${params.end}`;
+	}
+
+	return cleanObject(map);
+  };
 
 // The map portion API is defined here essentially
 export const createQueryParameters = ({
@@ -104,16 +139,15 @@ export const createQueryParameters = ({
 		query_place_id,
 		navigate_mode,
 		travelType,
-		zoom
-	}
-	
-	if (latitude && longitude) {
-		formatArguments.coords = geoCordStringify(latitude, longitude);
+		zoom,
+		latitude,
+		longitude
 	}
 
 	return {
 		apple: createAppleParams(formatArguments),
-		google: createGoogleParams(formatArguments)
+		google: createGoogleParams(formatArguments),
+		yandex: createYandexParams(formatArguments)
 	}
 };
 
@@ -140,9 +174,10 @@ export function createMapLink({
 	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
-		apple: 'http://maps.apple.com/?'
+		apple: 'http://maps.apple.com/?',
+		yandex: 'https://maps.yandex.com/?'
 	};
-	
+
 	// Display if lat and longitude is specified
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
@@ -168,9 +203,11 @@ export function createMapLink({
 	// Escaped commas cause unusual error with Google map
 	const appleQs = queryString.stringify(queryParameters.apple).replace(/%2C/g, ',');
 	const googleQs = queryString.stringify(queryParameters.google).replace(/%2C/g, ',');
+	const yandexQs = queryString.stringify(queryParameters.yandex).replace(/%2C/g, ',');
 
 	link.google += googleQs;
 	link.apple  += appleQs;
+	link.yandex += yandexQs;
 
 	return link[provider];
 }
