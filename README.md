@@ -1,5 +1,5 @@
 # react-native-open-maps
- [![Travis](https://img.shields.io/travis/brh55/react-native-open-maps/master.svg?style=flat-square)](https://travis-ci.org/brh55/react-native-open-maps) [![David](https://img.shields.io/david/dev/brh55/react-native-open-maps.svg?style=flat-square)](https://david-dm.org/brh55/react-native-open-maps?type=dev) [![npm](https://img.shields.io/npm/dt/react-native-open-maps.svg?style=flat-square)](https://www.npmjs.com/package/react-native-open-maps)
+ [![Travis](https://img.shields.io/travis/brh55/react-native-open-maps/master.svg?style=flat-square)](https://travis-ci.org/brh55/react-native-open-maps) [![npm](https://img.shields.io/npm/dt/react-native-open-maps.svg?style=flat-square)](https://www.npmjs.com/package/react-native-open-maps)
 
 > 🗺 A simple cross-platform library to help perform map actions to the corresponding device's map (Google or Apple Maps)
 
