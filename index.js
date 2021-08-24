@@ -12,14 +12,15 @@ export const geoCordStringify = (latitude, longitude) => {
 	return `${latitude},${longitude}`;
 }
 
-export const validateTravelType = type => {
-	// Google supports "biking", omitted for sake of compatability and user expectations
-	const TRAVEL_TYPE_ENUM = ['drive', 'walk', 'public_transport'];
-	const validType = TRAVEL_TYPE_ENUM.filter(validType => validType === type);
+export const validateEnum = (enums) => (type) => {
+	const validType = enums.filter(validType => validType === type);
 	if (!validType) {
-		throw new Error(`Recieved ${type}, expected ${TRAVEL_TYPE_ENUM}`);
+		throw new Error(`Received ${type}, expected ${enums}`);
 	}
 }
+
+export const validateTravelType = validateEnum(['drive', 'walk', 'public_transport']);
+export const validateMapType = validateEnum(['standard', 'satellite', 'hybrid', 'transit']);
 
 // cleanObject :: {} -> {}
 // Creates a new object that removes any empty values
@@ -39,13 +40,21 @@ export const createAppleParams = params => {
 		public_transport: 'r'
 	};
 
+	const baseTypeMap = {
+		satellite: 'k',
+		standard: 'm',
+		hybrid: 'h',
+		transit: 'r',
+	}
+
 	const map = {
 		ll: geoCordStringify(params.latitude, params.longitude),
 		z: params.zoom,
-		dirflg: travelTypeMap[params.travelType],
+		dirflg: travelTypeMap[params.travelType] || travelTypeMap['drive'],
 		q: params.query,
 		saddr: params.start,
-		daddr: params.end
+		daddr: params.end,
+		t: baseTypeMap[params.mapType] || baseTypeMap['standard']
 	}
 
 	return cleanObject(map);
@@ -59,16 +68,28 @@ export const createGoogleParams = params => {
 		public_transport: 'transit'
 	};
 
+	const baseTypeMap = {
+		satellite: 'satellite',
+		standard: 'roadmap',
+		hybrid: 'satellite',
+		transit: 'roadmap',
+	}
+
 	const map = {
 		origin: params.start,
 		destination: params.end,
 		destination_place_id: params.endPlaceId,
 		travelmode: travelTypeMap[params.travelType],
-		zoom: params.zoom
+		zoom: params.zoom,
+		basemap: baseTypeMap[params.mapType],
 	};
 
-	if (params.navigateMode === 'navigate') {
-		map.dir_action = 'navigate'
+	if (params.mapType === 'transit' || params.mapType === 'hybrid') {
+		map.layer = 'transit';
+	}
+
+	if (params.navigate === true) {
+		map.dir_action = 'navigate';
 	}
 
 	if (params.coords) {
@@ -89,6 +110,12 @@ export const createYandexParams = params => {
 	  	public_transport: 'mt'
 	};
 
+	const baseTypeMap = {
+		standard: 'map',
+		satellite: 'satellite',
+		hybrid: 'skl'
+	}
+
 	const map = {
 	  	z: params.zoom,
 	  	rtt: travelTypeMap[params.travelType],
@@ -96,7 +123,8 @@ export const createYandexParams = params => {
 	  	ll: geoCoordsStringify(params.longitude, params.latitude),
 	  	pt: geoCoordsStringify(params.longitude, params.latitude),
 	  	oid: params.queryPlaceId,
-	  	text: params.query
+	  	text: params.query,
+		l: baseTypeMap[params.mapType] || baseTypeMap['standard']
 	};
 
 	if (params.start && params.end) {
@@ -126,10 +154,12 @@ export const createQueryParameters = ({
 	endPlaceId = '',
 	query = '',
 	queryPlaceId = '',
-	navigateMode = 'preview', // preview has always being the default mode
-	travelType = 'drive'
+	navigate = false,
+	travelType = 'drive',
+	mapType = 'standard'
 }) => {
 	validateTravelType(travelType);
+	validateMapType(mapType);
 
 	const formatArguments = {
 		start,
@@ -137,7 +167,7 @@ export const createQueryParameters = ({
 		endPlaceId,
 		query,
 		queryPlaceId,
-		navigateMode,
+		navigate,
 		travelType,
 		zoom
 	}
@@ -174,7 +204,7 @@ export function createMapLink({
 	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
-		apple: (Platform.OS === 'ios') ? 'maps://?' : 'http://maps.apple.com/?'
+		apple: (Platform.OS === 'ios') ? 'maps://?' : 'http://maps.apple.com/?',
 		yandex: 'https://maps.yandex.com/?'
 	};
 
@@ -182,21 +212,16 @@ export function createMapLink({
 	if (params.latitude && params.longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
 
-		// if navigateMode is navigate with latlng params
-		if (params.navigateMode === 'navigate') {
-			console.warn("navigateMode='navigate' only supports 'end' prop")
-			params.navigateMode = 'preview';
+		// if navigate is navigate with latlng params
+		if (params.navigate === true) {
+			console.warn("Expected 'end' parameter in navigation, defaulting to preview mode.");
+			params.navigate = false;
 		}
 	}
 
 	// Directions if start and end is present
 	if (params.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
-	}
-
-	// throw an error to the developer
-	if (params.start && params.navigateMode === 'navigate') {
-		console.warn("navigateMode='navigate' only supports 'end' prop")
 	}
 
 	const queryParameters = createQueryParameters(params);
