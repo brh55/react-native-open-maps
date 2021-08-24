@@ -139,9 +139,11 @@ export const createQueryParameters = ({
 		query_place_id,
 		navigate_mode,
 		travelType,
-		zoom,
-		latitude,
-		longitude
+		zoom
+	}
+
+	if (latitude && longitude) {
+		formatArguments.coords = geoCordStringify(latitude, longitude);
 	}
 
 	return {
@@ -174,7 +176,7 @@ export function createMapLink({
 	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
-		apple: 'http://maps.apple.com/?',
+		apple: (Platform.OS === 'ios') ? 'maps://?' : 'http://maps.apple.com/?'
 		yandex: 'https://maps.yandex.com/?'
 	};
 
