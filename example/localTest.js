@@ -228,5 +228,5 @@ export function createMapLink({
 
 	const queryParameters = createQueryParameters(provider, params);
 	// Escaped commas cause unusual error with Google map
-	return link[provider] + queryString.stringify(queryParameters[provider]).replace(/%2C/g, ',');
+    return link[provider] + queryString.stringify(queryParameters).replace(/%2C/g, ',');
 }
