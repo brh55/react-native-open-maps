@@ -1,6 +1,7 @@
 import { Linking, Platform } from 'react-native';
 import queryString from 'query-string';
 
+// Stringifies the latitude and longitude into coordinates
 export const geoCordStringify = (latitude, longitude) => {
 	[latitude, longitude].map(coord => {
 		if (typeof coord !== 'number') {
@@ -11,11 +12,12 @@ export const geoCordStringify = (latitude, longitude) => {
 	return `${latitude},${longitude}`;
 }
 
-export const validateEnum = (enums) => (type) => {
-	const validType = enums.filter(validType => validType === type);
-	if (!validType) {
+// Creates a validator for an array
+export const validateEnum = (enums = []) => (type) => {
+	if (enums.indexOf(type) === -1) {
 		throw new Error(`Received ${type}, expected ${enums}`);
 	}
+	return true;
 }
 
 export const validateTravelType = validateEnum(['drive', 'walk', 'public_transport']);
@@ -24,14 +26,15 @@ export const validateMapType = validateEnum(['standard', 'satellite', 'hybrid', 
 // cleanObject :: {} -> {}
 // Creates a new object that removes any empty values
 const cleanObject = input => {
-	return Object.keys(input).reduce((acc, key, index,)=> {
+	return Object.keys(input).reduce((acc, key) => {
 		const currentValue = input[key];
 		return (currentValue) ?
 			Object.assign({}, acc, { [key]: currentValue }) : acc;
 	}, {});
 }
 
-// Create apple parameters
+// Create Apple Maps Parameters
+// doc: https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html
 export const createAppleParams = params => {
 	const travelTypeMap = {
 		drive: 'd',
@@ -49,7 +52,7 @@ export const createAppleParams = params => {
 	const map = {
 		ll: params.coords,
 		z: params.zoom,
-		dirflg: travelTypeMap[params.travelType] || travelTypeMap['drive'],
+		dirflg: (params.travelType) ? travelTypeMap[params.travelType] : null,
 		q: params.query,
 		saddr: params.start,
 		daddr: params.end,
@@ -59,7 +62,8 @@ export const createAppleParams = params => {
 	return cleanObject(map);
 }
 
-// Create google parameters
+// Create Google Maps Parameters
+// doc: https://developers.google.com/maps/documentation/urls/get-started
 export const createGoogleParams = params => {
 	const travelTypeMap = {
 		drive: 'driving',
@@ -71,7 +75,7 @@ export const createGoogleParams = params => {
 		satellite: 'satellite',
 		standard: 'roadmap',
 		hybrid: 'satellite',
-		transit: 'roadmap',
+		transit: 'roadmap'
 	}
 
 	const map = {
@@ -101,7 +105,7 @@ export const createGoogleParams = params => {
 	return cleanObject(map);
 }
 
-// create Yandex params
+// Create Yandex Maps Parameters
 export const createYandexParams = params => {
 	const travelTypeMap = {
 	  	drive: 'auto',
@@ -147,18 +151,23 @@ export const createYandexParams = params => {
 export const createQueryParameters = (provider, {
 	latitude,
 	longitude,
-	zoom = 15,
-	start = '',
-	end = '',
-	endPlaceId = '',
-	query = '',
-	queryPlaceId = '',
+	zoom,
+	start,
+	end,
+	endPlaceId,
+	query,
+	queryPlaceId,
 	navigate = false,
-	travelType = 'drive',
-	mapType = 'standard'
+	travelType,
+	mapType
 }) => {
-	validateTravelType(travelType);
-	validateMapType(mapType);
+	if (travelType) {
+		validateTravelType(travelType);
+	}
+
+	if (mapType) {
+		validateMapType(mapType);
+	}
 
 	const formatArguments = {
 		start,
