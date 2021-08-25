@@ -33,21 +33,23 @@
   },
   "author": "Brandon Him",
   "devDependencies": {
-    "babel-jest": "^20.0.3",
-    "babel-preset-react-native": "^2.1.0",
-    "jest": "^20.0.4",
-    "jest-react-native": "^18.0.0",
-    "react": "^15.6.1",
-    "react-native": "^0.46.4"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-native": ">0.45.0"
+    "babel-jest": "^26.6.3",
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "react-native": "^0.65.0",
+    "jest": "^26.3.0",
+    "metro-react-native-babel-preset": "^0.66.0",
+    "react-native-codegen": "^0.0.7",
+    "react-test-renderer": "17.0.2"
   },
   "jest": {
+    "preset": "react-native",
+    "cacheDirectory": "./cache/jest",
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/",
-      "<rootDir>/__tests__/mocks/"
+      "<rootDir>/example/node_modules"
+    ],
+    "roots": [
+      "<rootDir>/__tests__"
     ]
   },
   "dependencies": {
