@@ -112,6 +112,22 @@ The query behavior differs per platform:
 - **Google Maps**: Will override `latitude` and `longitude` if present and center map to closest query match. Without a `query`, you may however use `<latitude>,<longitude>` as a string value in the query to have a unnamed marker on the map.
 - **Yandex Maps**: If `latitude` and `longitude` is provided, this will place a point to show the accurate location. If no `latitude` or `longitude` is provided, it will center map to closest query match.
 
+## Contribute
+Contributions are greatly appreciated! Prior to submitting PRs, please try to test your changes against the example application provided to make sure your changes do not break existing platforms. In addition, unit tests are recommended for new features or large changes.
+
+### Run Changes on Example App
+To test your changes against the example application.
+
+1. `npm run example-test`
+2. `cd example`
+3. `npx react-native start`
+4. Run on your desired simulator
+
+Your changes should not cause unexpected behaviors or warnings.
+
+### Run Test Suite
+1. `npm test`
+
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)
 
