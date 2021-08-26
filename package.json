@@ -7,7 +7,8 @@
     "example": "example"
   },
   "scripts": {
-    "test": "cp ./index.js ./example/tester.js && jest"
+    "test": "jest",
+    "example-test": "cp ./index.js ./example/LocalTest.js"
   },
   "keywords": [
     "react-native",
