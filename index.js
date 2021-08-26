@@ -127,7 +127,7 @@ export const createYandexParams = options => {
 		standard: 'map',
 		satellite: 'satellite',
 		hybrid: 'skl',
-		transit: 'map' // Yandex does not have a transit map per docs
+		transit: 'map' // Yandex does not have a transit map per docs, setting to default
 	}
 
 	const params = {
@@ -138,7 +138,7 @@ export const createYandexParams = options => {
 	  	pt: options.reverseCoords,
 	  	oid: options.queryPlaceId,
 	  	text: options.query,
-		l: baseTypeMap[options.mapType] || baseTypeMap['standard']
+		l: (options.mapType) ? baseTypeMap[options.mapType] : null
 	};
 
 	if (options.start && options.end) {

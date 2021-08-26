@@ -1,5 +1,5 @@
 import { validate } from '@babel/types';
-import { beforeEach, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from '@jest/globals';
 import { validateEnum } from '..';
 import {
 	createMapLink,
@@ -16,6 +16,8 @@ const testOptions = {
 
 const appleAddress = '1 Infinite Loop, Cupertino, CA';
 const googleAddress = '1600 Amphitheatre Pkwy, Mountain View, CA 94043';
+
+const genOptions = (provider, options) => ({ ...options, provider});
 
 afterEach(() => {
 	jest.resetModules();
@@ -55,195 +57,207 @@ describe('Core Functionality', () => {
 		expect(createMapLink(options)).toEqual(baseUrl + 'zoom=5');
 	});
 
-	describe('Apple Maps Links', () => {
+	describe('Maps Links', () => {
 		const provider = 'apple';
-		const baseUrl = 'http://maps.apple.com/?';
+		const url = {
+			apple: 'http://maps.apple.com/?',
+			yandex: 'https://maps.yandex.com/?',
+			google: {
+				search: 'https://www.google.com/maps/search/?api=1&',
+				directions: 'https://www.google.com/maps/dir/?api=1&',
+				display: 'https://www.google.com/maps/@?api=1&map_action=map&'
+			}
+		};
 
 		beforeEach(() => {
 			jest.mock('react-native/Libraries/Utilities/Platform', () => ({}));
 		});
 
-		test('Search query', () => {
+		describe('Search query', () => {
 			const query = 'Yosemite National Park';
-			expect(createMapLink({ provider, query })).toEqual(baseUrl + 'q=Yosemite%20National%20Park');
+
+			test('Apple Maps', () => {
+				expect(createMapLink({ provider: 'apple', query })).toEqual(url.apple + 'q=Yosemite%20National%20Park');
+			});
+			
+			test('Google Maps', () => {
+				expect(createMapLink({ provider: 'google', query })).toEqual(url.google.search + 'query=Yosemite%20National%20Park');
+			});
+
+			test('Yandex Maps', () => {
+				expect(createMapLink({ provider: 'yandex', query })).toEqual(url.yandex + 'text=Yosemite%20National%20Park');
+			});
 		});
 
-		test('Search query near location', () => {
+		describe('Search query near location', () => {
 			const query = 'Yosemite National Park';
 			const options = {
-				provider, query, latitude: testOptions.latitude, longitude: testOptions.longitude
+				provider, query, ...testOptions
 			}
-			// Should supply a z parameter
-			expect(createMapLink(options))
-				.toEqual(baseUrl + 'll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=15');
 
-			expect(createMapLink({ ...options, zoom: 5 }))
-				.toEqual(baseUrl + 'll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=5');
+			test('Apple Maps', () => {
+				// Should supply a z parameter
+				expect(createMapLink(options))
+					.toEqual(url.apple + 'll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=15');
+
+				expect(createMapLink({ ...options, zoom: 5 }))
+					.toEqual(url.apple + 'll=10.02134,-29.21322&q=Yosemite%20National%20Park&z=5');
+			})
+
+			test('Google Maps', () => {
+				expect(createMapLink(genOptions('google', options)))
+					.toEqual(url.google.display + 'center=10.02134,-29.21322');
+			})
+
+			test('Yandex Maps', () => {
+				const provider = 'yandex';
+				expect(createMapLink(genOptions('yandex', options)))
+					.toEqual(url.yandex + 'll=-29.21322,10.02134&pt=-29.21322,10.02134&text=Yosemite%20National%20Park');
+			})
 		});
 
-		test('Get directions from start to end', () => {
-			expect(createMapLink({ provider, start: 'Cupertino', end: 'San Francisco' })).toEqual(baseUrl + 'daddr=San%20Francisco&saddr=Cupertino');
+		describe('Get directions from start to end', () => {
+			const start = 'Cupertino';
+			const end = 'San Francisco';
+			test('Apple Maps', () => {
+				expect(createMapLink({ provider, start, end })).toEqual(url.apple + 'daddr=San%20Francisco&saddr=Cupertino');
+			});
+
+			test('Google Maps', () => {
+				const provider = 'google';
+				expect(createMapLink({ provider, start, end })).toEqual(url.google.directions + 'destination=San%20Francisco&origin=Cupertino');
+			});
+
+			test('Yandex Maps', () => {
+				const provider = 'yandex';
+				expect(createMapLink({ provider, start, end })).toEqual(url.yandex + 'rtext=Cupertino~San%20Francisco');
+			});
+
 		});
 
-		test('Get directions from here', () => {
-			expect(createMapLink({ provider, end: 'San Francisco' })).toEqual(baseUrl + 'daddr=San%20Francisco');
+		describe('Get directions from here', () => {
+			const end = 'San Francisco';
+			test('Apple Maps', () => {
+				expect(createMapLink({ provider, end })).toEqual(url.apple + 'daddr=San%20Francisco');
+			});
+
+			test('Google Maps', () => {
+				const provider = 'google';
+				expect(createMapLink({ provider, end })).toEqual(url.google.directions + 'destination=San%20Francisco');
+			});
+
+			test('Yandex Maps', () => {
+				const provider = 'yandex';
+				expect(createMapLink({ provider, end })).toEqual(url.yandex + 'rtext=San%20Francisco');
+			});
 		});
 
-		test('Display different travel options', () => {
-			const prefix = baseUrl + 'daddr=Cupertino,%20CA&dirflg=';
-			expect(createMapLink({ provider, end: 'Cupertino, CA', travelType: 'drive' })).toEqual(prefix + 'd');
-			expect(createMapLink({ provider, end: 'Cupertino, CA', travelType: 'walk' })).toEqual(prefix + 'w');
-			expect(createMapLink({ provider, end: 'Cupertino, CA', travelType: 'public_transport' })).toEqual(prefix + 'r');
+		describe('Directions for different travel options', () => {
+			const end = 'Cupertino, CA';
+			const drive = { end, travelType: 'drive' };
+			const walk = { end, travelType: 'walk' };
+			const publicTransportation = { end, travelType: 'public_transport' };
+
+			test('Apple Maps', () => {
+				const prefix = url.apple + 'daddr=Cupertino,%20CA&dirflg=';
+				expect(createMapLink(genOptions('apple', drive))).toEqual(prefix + 'd');
+				expect(createMapLink(genOptions('apple', walk))).toEqual(prefix + 'w');
+				expect(createMapLink(genOptions('apple', publicTransportation))).toEqual(prefix + 'r');
+			});
+			
+			test('Google Maps', () => {
+				const prefix = url.google.directions + 'destination=Cupertino,%20CA&travelmode=';
+				expect(createMapLink(genOptions('google', drive))).toEqual(prefix + 'driving');
+				expect(createMapLink(genOptions('google', walk))).toEqual(prefix + 'walking');
+				expect(createMapLink(genOptions('google', publicTransportation))).toEqual(prefix + 'transit');
+			});
+
+			test('Yandex Maps', () => {
+				const prefix = url.yandex + 'rtext=Cupertino,%20CA&rtt=';
+				expect(createMapLink(genOptions('yandex', drive))).toEqual(prefix + 'auto');
+				expect(createMapLink(genOptions('yandex', walk))).toEqual(prefix + 'pd');
+				expect(createMapLink(genOptions('yandex', publicTransportation))).toEqual(prefix + 'mt');
+			});
 		});
 
-		test('Display with different base map options', () => {
-			const prefix = baseUrl + 'll=10.02134,-29.21322&t=';
-			expect(createMapLink({ provider, ...testOptions, mapType: 'satellite' })).toEqual(prefix + 'k');
-			expect(createMapLink({ provider, ...testOptions, mapType: 'standard' })).toEqual(prefix + 'm');
-			expect(createMapLink({ provider, ...testOptions, mapType: 'hybrid' })).toEqual(prefix  + 'h');
-			expect(createMapLink({ provider, ...testOptions, mapType: 'transit' })).toEqual(prefix  + 'r');
+		describe('Display with different base map options', () => {
+			const satellite = { ...testOptions, mapType: 'satellite' };
+			const hybrid = { ...testOptions, mapType: 'hybrid' };
+			const transit = { ...testOptions, mapType: 'transit' };
+			const standard = { ...testOptions, mapType: 'standard' };
 
-			// Throw if not a correct map type
-			expect(() => {
-				createMapLink({ provider, ...testOptions, mapType: 'foo'})
-			}).toThrow();
+			test('Apple Maps', () => {
+				const prefix = url.apple + 'll=10.02134,-29.21322&t=';
+
+				expect(createMapLink(genOptions('apple', satellite))).toEqual(prefix + 'k');
+				expect(createMapLink(genOptions('apple', standard))).toEqual(prefix + 'm');
+				expect(createMapLink(genOptions('apple', hybrid))).toEqual(prefix  + 'h');
+				expect(createMapLink(genOptions('apple', transit))).toEqual(prefix  + 'r');	
+			});
+
+
+			test('Google Maps', () => {
+				const createUrl = (base) => `${url.google.display}basemap=${base}&center=10.02134,-29.21322`;
+
+				expect(createMapLink(genOptions('google', satellite))).toEqual(createUrl('satellite'));
+				expect(createMapLink(genOptions('google', standard))).toEqual(createUrl('roadmap'));
+				expect(createMapLink(genOptions('google', hybrid))).toEqual(createUrl('satellite') + '&layer=transit');
+				expect(createMapLink(genOptions('google', transit))).toEqual(createUrl('roadmap')  + '&layer=transit');	
+			});
+
+			test('Yandex Maps', () => {
+				const createUrl = (base) => `${url.yandex}l=${base}&ll=-29.21322,10.02134&pt=-29.21322,10.02134`;
+
+				expect(createMapLink(genOptions('yandex', satellite))).toEqual(createUrl('satellite'));
+				expect(createMapLink(genOptions('yandex', standard))).toEqual(createUrl('map'));
+				expect(createMapLink(genOptions('yandex', hybrid))).toEqual(createUrl('skl'));
+				expect(createMapLink(genOptions('yandex', transit))).toEqual(createUrl('map'));
+			});
+
+			test('Incorrect Map Type', () => {
+				expect(() => {
+					createMapLink({ provider, ...testOptions, mapType: 'foo'})
+				}).toThrow();
+			})
 		});
 
-		test('Display and center map around coordinates', () => {
-			expect(createMapLink({ provider, ...testOptions })).toEqual(baseUrl + 'll=10.02134,-29.21322');
+		describe('Display and center map around coordinates', () => {
+			test('Apple Maps', () => {
+				expect(createMapLink(genOptions('apple', testOptions))).toEqual(url.apple + 'll=10.02134,-29.21322');
+			});
+
+			test('Google Maps', () => {
+				expect(createMapLink(genOptions('google', testOptions))).toEqual(url.google.display + 'center=10.02134,-29.21322');
+			});
+
+			test('Yandex Maps', () => {
+				expect(createMapLink(genOptions('yandex', testOptions))).toEqual(url.yandex + 'll=-29.21322,10.02134&pt=-29.21322,10.02134');
+			});
 		});
 
-		test('Display map around address', () => {
-			expect(createMapLink({ provider, address: appleAddress})).toEqual(baseUrl + 'address=1%20Infinite%20Loop,%20Cupertino,%20CA');
-			expect(createMapLink({ provider, address: googleAddress})).toEqual(baseUrl + 'address=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+		describe('Display map around address', () => {
+			const appleAddress = { address: appleAddress };
+			const googleAddress = { address: googleAddress };
+
+			test('Apple Maps', () => {
+				expect(createMapLink(genOptions('apple', appleAddress))).toEqual(url.apple + 'address=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('apple', googleAddress))).toEqual(url.apple + 'address=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+			});
+
+			test('Google Maps', () => {
+				expect(createMapLink(genOptions('google', googleAddress))).toEqual(url.google.search + 'address=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('google', appleAddress))).toEqual(url.google.search + 'address=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+			});
+
+			test('Yandex Maps', () => {
+				expect(createMapLink(genOptions('yandex', googleAddress))).toEqual(url.yandex + 'text=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('yandex', googleAddress))).toEqual(url.yandex + 'text=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+			});
 		});
-	});
 
-
-	describe('Google Maps', () => {
-		const provider = 'google';
-		const baseUrl = 'http://maps.apple.com/?';
-
-		test('Create a map link with correct query strings', () => {
-			// Google Display Link
-			expect(createMapLink(options))
-				.toEqual(
-					'https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11'
-				);
-
-			// Google map link
-			expect(createMapLink({ ...options, provider: 'google', query }))
-				.toEqual('https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11');
-		});
 	});
 
 });
-
-
-
-// const expectedQueryName = encodeURI(query);
-
-
-// // Check to make sure it omits empty params
-// const formattedParams2 = {
-// 	query: 'New York City, New York, NY',
-// 	coords: '',
-// 	zoom: 5,
-// 	travelType: 'walk',
-// 	end: '',
-// 	start: ''
-// };
-
-// // test('Create apple params', () => {
-// // 	expect(
-// // 		createAppleParams(formattedParams)
-// // 	).toMatchObject({
-// // 		z: 10,
-// // 		dirflg: 'd',
-// // 		ll: '11.11,22.222'
-// // 	});
-	
-// // 	expect(
-// // 		createAppleParams(formattedParams2)
-// // 	)
-// // 	.toMatchObject({
-// // 		q: 'New York City, New York, NY',
-// // 		z: 5,
-// // 		dirflg: 'w',
-// // 	});
-// // });
-
-// // test('Create proper query parameter mapping', () => {
-// // 	const base = {
-// // 		latitude: 22.22,
-// // 		longitude: 11.11,
-// // 		zoom: 10,
-// // 		travelType: 'drive'
-// // 	};
-
-// // 	const baseExpected = {
-// // 		apple: {
-// // 			ll: '22.22,11.11',
-// // 			z: base.zoom,
-// // 			dirflg: 'd'
-// // 		},
-// // 		google: {
-// // 			center: '22.22,11.11',
-// // 			zoom: base.zoom,
-// // 			travelmode: 'driving'
-// // 		}
-// // 	};
-
-// // 	const googleQS = createQueryParameters('google', base);
-// // 	const appleQS = createQueryParameters('apple', base);
-// // 	expect(googleQS).toMatchObject(baseExpected.google);
-// // 	expect(appleQS).toMatchObject(baseExpected.apple);
-
-// // 	const directions = {
-// // 		start: 'City Hall, New York City, NY',
-// // 		end: 'SOHO, New York City, NY',
-// // 		travelType: 'drive',
-// // 	}
-
-// // 	const directionInput = Object.assign({}, base, directions);
-
-// // 	const expectedDirection = {
-// // 		apple: {
-// // 			...baseExpected.apple,
-// // 			saddr: directions.start,
-// // 			daddr: directions.end,
-// // 			dirflg: 'd'
-// // 		},
-// // 		google: {
-// // 			...baseExpected.google,
-// // 			origin: directions.start,
-// // 			destination: directions.end,
-// // 			travelmode: 'driving'
-// // 		}
-// // 	};
-
-// // 	const directionOuput = createQueryParameters(directionInput);
-// // 	expect(directionOuput).toMatchObject(expectedDirection);
-// // });
-
-
-// describe('Google Maps', () => {
-// 	test('Create proper links query links', () => {
-// 		// Google Display Link
-// 		expect(createMapLink(options))
-// 			.toEqual(
-// 				'https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11'
-// 			);
-	
-// 		// Google map link
-// 		expect(createMapLink({ ...options, provider: 'google', query }))
-// 			.toEqual('https://www.google.com/maps/@?api=1&map_action=map&center=10.02134,-29.21322&travelmode=driving&zoom=11');
-// 	});
-// })
-
-// describe('Yandex Maps', () => {
-
-// });
 
 describe('Utilities', () => {
 	test('geoCordStringify: stringifies latitude and longitude', () => {
