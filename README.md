@@ -108,6 +108,47 @@ To perform certain map actions refer these necessary parameters
 - **Display Map Around Coordinates:** `latitude` **+** `longitude`, [ *`zoom`* ]
 - **Query Map For Location:** `query`
 
+### Examples
+#### Search by query
+```js
+createMapLink({ provider: 'apple', query: 'Yosemite National Park' });
+```
+
+#### Search query near coordinates (lat/lng)
+```js
+createMapLink({ provider: 'apple', query: 'Coffee Shop', latitude: 10.02134, longitude: -29.21322 })
+```
+
+#### Get directions from start to end using addresses
+```js
+createMapLink({ provider: 'yandex', start: '1 Infinite Loop, Cupertino, CA', end: '1600 Amphitheatre Pkwy, Mountain View, CA' })
+```
+
+#### Get directions from here
+```js
+createMapLink({ provider: 'google', end: 'New York City, NY' })
+```
+
+#### Get directions by walking with a hybrid view (satellite and transit)
+```js
+createMapLink({ provider: 'google', end: 'New York City, NY', travelType: 'walking', mapType: 'hybrid' })
+```
+
+##### Get public transit directions from start to end
+```js
+createMapLink({ provider: 'google', start: 'SoHo, Manhattan, New York, NY', end: 'Times Square, Manhattan, NY', travelType: 'public_transportation' })
+```
+
+##### Display with different base map options
+```js
+createMapLink({ provider: 'apple', query: 'hiking trails', mapType: 'satellite' })
+```
+
+##### Display centered around coordinates, really zoomed in
+```js
+createMapLink({ provider: 'yandex', latitude: 10.02134, longitude: -29.21322, zoom: 20 })
+```
+
 ##### Query Property
 The query behavior differs per platform:
 - **Apple Maps**: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match.
