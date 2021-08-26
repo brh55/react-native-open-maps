@@ -1,7 +1,7 @@
 # react-native-open-maps
- [![Travis](https://img.shields.io/travis/brh55/react-native-open-maps/master.svg?style=flat-square)](https://travis-ci.org/brh55/react-native-open-maps) [![David](https://img.shields.io/david/dev/brh55/react-native-open-maps.svg?style=flat-square)](https://david-dm.org/brh55/react-native-open-maps?type=dev) [![npm](https://img.shields.io/npm/dt/react-native-open-maps.svg?style=flat-square)](https://www.npmjs.com/package/react-native-open-maps)
+ [![Travis](https://img.shields.io/travis/brh55/react-native-open-maps/master.svg?style=flat-square)](https://travis-ci.org/brh55/react-native-open-maps) [![npm](https://img.shields.io/npm/dt/react-native-open-maps.svg?style=flat-square)](https://www.npmjs.com/package/react-native-open-maps)
 
-> 🗺 A simple cross-platform library to help perform map actions to the corresponding device's map (Google or Apple Maps)
+> 🗺 A simple cross-platform library to help perform map actions to the corresponding device's map (Google, Apple, or Yandex Maps)
 
 `react-native-open-maps` works by creating a deep link for either Apple, Google, and Yandex maps that can be used to open up the relevant map application. In order to maximize compatibility some platform specific parameters are omitted, but simplifies development efforts and ensures a smooth user experience.
 
@@ -9,9 +9,9 @@
 - ✅ Open the map coordinates immediately
 - ✅ Create a delayed invoked `function` that will open the map
 - ✅ Create a `string` of the map link
-- Cross-compatible properties among both map applications
+- Cross-compatible properties among different map applications
 
-![Demo Gif](http://g.recordit.co/RhkI4WISXT.gif)
+![New Demo Preview](http://g.recordit.co/0IPl516Adc.gif)
 
 ## Usage
 1. Install the repository
@@ -68,6 +68,8 @@ const openFacebookHQ = createOpenLink(facebookHQ);
         );
 ```
 
+If you need additional examples, view the example directory for a demo you can run locally.
+
 ## API
 #### default function `open(options)`
 `react-native-open-maps` immediately opens the map of the coordinates and the settings
@@ -79,22 +81,24 @@ Creates a delayed invoked function to open the map. This is useful for binding f
 Creates the raw link for the map.
 
 #### options
-> 🔑 *Italicize indicates optional*
+| Properties   | Type                                                   | Description                                                  | Example                         | Map Support |
+| ------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------- | ----------- |
+| *latitude*   | `number`                                               | The latitude                                                 | 37.865101                       | All         |
+| *longitude*  | `number`                                               | The longitude                                                | -119.538330                     | All         |
+| *zoom*       | `number`                                               | The zoom level, only works with `latitude` and `longitude`   | 18 <br> *Default: 15*           | All         |
+| *provider*   | `string` <br> [`google`,`apple`,`yandex`]                       | If no provider set, it will determine according to `Platform.OS` | `apple`                         | N/A         |
+| *query*      | `string`                                               | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`              | All         |
+| *queryPlaceId* | `string`                                               | Will query by Place ID.                                      | `ChIJgUbEo8cfqokR5lP9_Wh_DaM`   | Google      |
+| *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`]   | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"`                       | All         |
+| *start*      | `string` that geolocation can understand               | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"New York City, New York, NY"` | All         |
+| *end*        | `string` that geolocation can understand.              | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"SOHO, New York, NY"`          | All         |
+| *endPlaceId* | `string`                                               | End destination with the use of a place ID that uniquely identifies a places. | `ChIJgUbEo8cfqokR5lP9_Wh_DaM`   | Google      |
+| *navigate*   | `boolean`                                              | This is only specific for Google. Yandex and Apple maps will provide directions if a `start ` and `end` is provided. | `true`                          | Google      |
+| *mapType*    | `enum`: [`standard`, `satellite`, `hybrid`, `transit`] | Specifies base map type. Note, `hybrid` is the satellite map with a transit layer, where as `transit` is the standard roadmap with a `transit` layer. | "hybrid"                        | All, except Yandex does not support "hybrid"        |
 
-| Properties | Type                                | Description                                                    | Example               |
-|------------|-------------------------------------|----------------------------------------------------------------|-----------------------|
-| *latitude*   | `number`                            | The latitude                                                   | 37.865101             |
-| *longitude*  | `number`                            | The longitude                                                  | -119.538330           |
-| *zoom*     | `number`                            | The zoom level, only works with `latitude` and `longitude`                                     | 18 <br> *Default: 15* |
-| *provider* | `string` <br> [`google`,`apple`] | If no provider set, it will determine according to `Platform.OS` | `apple`               |
-| *query*      | `string`                            | Will act according to the map used. Refer to [query property](#query-property) | `"Yosemite Trail"`    |
-| *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`] | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"` |
-| *start* | `string` that geolocation can understand | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"New York City, New York, NY"` |
-| *end* | `string` that geolocation can understand. | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"SOHO, New York, NY"` |
-| *navigate_mode* | `string` <br> [`preview`,`navigate`] | Determines whether map should open in preview mode or in navigate mode (with turn-by-turn navigation). <br> This parameter only works in conjunction with `end`. Platform map uses current location as `start` parameter | `"navigate"` <br> *default: `"preview"`* |
-
-**Note:** Combining query with latitude and longitude will override the query parameter.
-**Note:** Yandex Maps does not support building routes from current location.
+**Note:** 
+- Combining query with latitude and longitude will override the query parameter.
+- Yandex Maps does not support building routes from current location.
 
 ### Map Actions
 To perform certain map actions refer these necessary parameters
@@ -107,6 +111,22 @@ The query behavior differs per platform:
 - **Apple Maps**: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match.
 - **Google Maps**: Will override `latitude` and `longitude` if present and center map to closest query match. Without a `query`, you may however use `<latitude>,<longitude>` as a string value in the query to have a unnamed marker on the map.
 - **Yandex Maps**: If `latitude` and `longitude` is provided, this will place a point to show the accurate location. If no `latitude` or `longitude` is provided, it will center map to closest query match.
+
+## Contribute
+Contributions are greatly appreciated! Prior to submitting PRs, please try to test your changes against the example application provided to make sure your changes do not break existing platforms. In addition, unit tests are recommended for new features or large changes.
+
+### Run Changes on Example App
+To test your changes against the example application.
+
+1. `npm run example-test`
+2. `cd example`
+3. `npx react-native start`
+4. Run on your desired simulator
+
+Your changes should not cause unexpected behaviors or warnings.
+
+### Run Test Suite
+1. `npm test`
 
 ## License
 MIT © [Brandon Him](https://github.com/brh55/react-native-open-maps)
