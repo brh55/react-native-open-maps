@@ -1,4 +1,9 @@
 language: node_js
 node_js:
-  - v7
-  - v6
+  - 16
+cache:
+  directories:
+    - node_modules
+script:
+  - npm test
+  - npm run coveralls
