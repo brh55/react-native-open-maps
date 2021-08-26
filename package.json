@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest",
-    "example-test": "cp ./index.js ./example/LocalTest.js"
+    "example-test": "cp ./index.js ./example/LocalTest.js",
+    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls"
   },
   "keywords": [
     "react-native",
