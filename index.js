@@ -49,10 +49,6 @@ export const createAppleParams = options => {
 		transit: 'r',
 	}
 
-	if (options.mapType) {
-		console.log('maptype', options.mapType)
-	}
-
 	const params = {
 		ll: options.coords,
 		z: options.zoom,
@@ -60,8 +56,7 @@ export const createAppleParams = options => {
 		q: options.query,
 		saddr: options.start,
 		daddr: options.end,
-		t: (options.mapType) ? baseTypeMap[options.mapType] : null,
-		address: options.address
+		t: (options.mapType) ? baseTypeMap[options.mapType] : null
 	}
 
 	// User performing a query near a location, this requires the z parameter for apple maps
@@ -210,8 +205,7 @@ export function createMapLink(options) {
 		queryPlaceId,
 		navigate,
 		travelType,
-		mapType,
-		address
+		mapType
 	} = options;
 
 	// Assume query is first choice

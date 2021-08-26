@@ -14,9 +14,6 @@ const testOptions = {
 	longitude: -29.21322,
 }
 
-const appleAddress = '1 Infinite Loop, Cupertino, CA';
-const googleAddress = '1600 Amphitheatre Pkwy, Mountain View, CA 94043';
-
 const genOptions = (provider, options) => ({ ...options, provider});
 
 afterEach(() => {
@@ -236,22 +233,25 @@ describe('Core Functionality', () => {
 		});
 
 		describe('Display map around address', () => {
-			const appleAddress = { address: appleAddress };
-			const googleAddress = { address: googleAddress };
+			const appleAddress = '1 Infinite Loop, Cupertino, CA';
+			const googleAddress = '1600 Amphitheatre Pkwy, Mountain View, CA 94043';
+
+			const address1 = { end: appleAddress };
+			const address2 = { end: googleAddress };
 
 			test('Apple Maps', () => {
-				expect(createMapLink(genOptions('apple', appleAddress))).toEqual(url.apple + 'address=1%20Infinite%20Loop,%20Cupertino,%20CA');
-				expect(createMapLink(genOptions('apple', googleAddress))).toEqual(url.apple + 'address=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+				expect(createMapLink(genOptions('apple', address1))).toEqual(url.apple + 'daddr=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('apple', address2))).toEqual(url.apple + 'daddr=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
 			});
 
 			test('Google Maps', () => {
-				expect(createMapLink(genOptions('google', googleAddress))).toEqual(url.google.search + 'address=1%20Infinite%20Loop,%20Cupertino,%20CA');
-				expect(createMapLink(genOptions('google', appleAddress))).toEqual(url.google.search + 'address=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+				expect(createMapLink(genOptions('google', address1))).toEqual(url.google.directions + 'destination=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('google', address2))).toEqual(url.google.directions + 'destination=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
 			});
 
 			test('Yandex Maps', () => {
-				expect(createMapLink(genOptions('yandex', googleAddress))).toEqual(url.yandex + 'text=1%20Infinite%20Loop,%20Cupertino,%20CA');
-				expect(createMapLink(genOptions('yandex', googleAddress))).toEqual(url.yandex + 'text=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
+				expect(createMapLink(genOptions('yandex', address1))).toEqual(url.yandex + 'rtext=1%20Infinite%20Loop,%20Cupertino,%20CA');
+				expect(createMapLink(genOptions('yandex', address2))).toEqual(url.yandex + 'rtext=1600%20Amphitheatre%20Pkwy,%20Mountain%20View,%20CA%2094043');
 			});
 		});
 
