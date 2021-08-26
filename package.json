@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "example-test": "cp ./index.js ./example/LocalTest.js",
-    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls"
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [
     "react-native",
