@@ -22,7 +22,7 @@ import {
 
 import {
   createOpenLink
-} from './localTest';
+} from './LocalTest';
 
 const DemoContent = (): Node => {
   const start = 'SOHO, New York City, NY';

@@ -1,6 +1,7 @@
 import { Linking, Platform } from 'react-native';
 import queryString from 'query-string';
 
+// Stringifies the latitude and longitude into coordinates
 export const geoCordStringify = (latitude, longitude) => {
 	[latitude, longitude].map(coord => {
 		if (typeof coord !== 'number') {
@@ -11,11 +12,12 @@ export const geoCordStringify = (latitude, longitude) => {
 	return `${latitude},${longitude}`;
 }
 
-export const validateEnum = (enums) => (type) => {
-	const validType = enums.filter(validType => validType === type);
-	if (!validType) {
+// Creates a validator for an array
+export const validateEnum = (enums = []) => (type) => {
+	if (enums.indexOf(type) === -1) {
 		throw new Error(`Received ${type}, expected ${enums}`);
 	}
+	return true;
 }
 
 export const validateTravelType = validateEnum(['drive', 'walk', 'public_transport']);
@@ -24,15 +26,16 @@ export const validateMapType = validateEnum(['standard', 'satellite', 'hybrid', 
 // cleanObject :: {} -> {}
 // Creates a new object that removes any empty values
 const cleanObject = input => {
-	return Object.keys(input).reduce((acc, key, index,)=> {
+	return Object.keys(input).reduce((acc, key) => {
 		const currentValue = input[key];
 		return (currentValue) ?
 			Object.assign({}, acc, { [key]: currentValue }) : acc;
 	}, {});
 }
 
-// Create apple parameters
-export const createAppleParams = params => {
+// Create Apple Maps Parameters
+// doc: https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html
+export const createAppleParams = options => {
 	const travelTypeMap = {
 		drive: 'd',
 		walk: 'w',
@@ -46,21 +49,32 @@ export const createAppleParams = params => {
 		transit: 'r',
 	}
 
-	const map = {
-		ll: params.coords,
-		z: params.zoom,
-		dirflg: travelTypeMap[params.travelType] || travelTypeMap['drive'],
-		q: params.query,
-		saddr: params.start,
-		daddr: params.end,
-		t: baseTypeMap[params.mapType] || baseTypeMap['standard']
+	if (options.mapType) {
+		console.log('maptype', options.mapType)
 	}
 
-	return cleanObject(map);
+	const params = {
+		ll: options.coords,
+		z: options.zoom,
+		dirflg: (options.travelType) ? travelTypeMap[options.travelType] : null,
+		q: options.query,
+		saddr: options.start,
+		daddr: options.end,
+		t: (options.mapType) ? baseTypeMap[options.mapType] : null,
+		address: options.address
+	}
+
+	// User performing a query near a location, this requires the z parameter for apple maps
+	if (options.query && options.coords && options.zoom === undefined) {
+		params.z = 15;
+	}
+
+	return cleanObject(params);
 }
 
-// Create google parameters
-export const createGoogleParams = params => {
+// Create Google Maps Parameters
+// doc: https://developers.google.com/maps/documentation/urls/get-started
+export const createGoogleParams = options => {
 	const travelTypeMap = {
 		drive: 'driving',
 		walk: 'walking',
@@ -71,38 +85,38 @@ export const createGoogleParams = params => {
 		satellite: 'satellite',
 		standard: 'roadmap',
 		hybrid: 'satellite',
-		transit: 'roadmap',
+		transit: 'roadmap'
 	}
 
-	const map = {
-		origin: params.start,
-		destination: params.end,
-		destination_place_id: params.endPlaceId,
-		travelmode: travelTypeMap[params.travelType],
-		zoom: params.zoom,
-		basemap: baseTypeMap[params.mapType],
+	const params = {
+		origin: options.start,
+		destination: options.end,
+		destination_place_id: options.endPlaceId,
+		travelmode: travelTypeMap[options.travelType],
+		zoom: options.zoom,
+		basemap: baseTypeMap[options.mapType],
 	};
 
-	if (params.mapType === 'transit' || params.mapType === 'hybrid') {
-		map.layer = 'transit';
+	if (options.mapType === 'transit' || options.mapType === 'hybrid') {
+		params.layer = 'transit';
 	}
 
-	if (params.navigate === true) {
-		map.dir_action = 'navigate';
+	if (options.navigate === true) {
+		params.dir_action = 'navigate';
 	}
 
-	if (params.coords) {
-		map.center = params.coords;
+	if (options.coords) {
+		params.center = options.coords;
 	} else {
-		map.query = params.query;
-		map.query_place_id = params.queryPlaceId;
+		params.query = options.query;
+		params.query_place_id = options.queryPlaceId;
 	}
 
-	return cleanObject(map);
+	return cleanObject(params);
 }
 
-// create Yandex params
-export const createYandexParams = params => {
+// Create Yandex Maps Parameters
+export const createYandexParams = options => {
 	const travelTypeMap = {
 	  	drive: 'auto',
 	  	walk: 'pd',
@@ -112,55 +126,83 @@ export const createYandexParams = params => {
 	const baseTypeMap = {
 		standard: 'map',
 		satellite: 'satellite',
-		hybrid: 'skl'
+		hybrid: 'skl',
+		transit: 'map' // Yandex does not have a transit map per docs
 	}
 
-	const map = {
-	  	z: params.zoom,
-	  	rtt: travelTypeMap[params.travelType],
+	const params = {
+	  	z: options.zoom,
+	  	rtt: travelTypeMap[options.travelType],
 	  	// yandex url scheme requires reversed coords
-	  	ll: params.reverseCoords,
-	  	pt: params.reverseCoords,
-	  	oid: params.queryPlaceId,
-	  	text: params.query,
-		l: baseTypeMap[params.mapType] || baseTypeMap['standard']
+	  	ll: options.reverseCoords,
+	  	pt: options.reverseCoords,
+	  	oid: options.queryPlaceId,
+	  	text: options.query,
+		l: baseTypeMap[options.mapType] || baseTypeMap['standard']
 	};
 
-	if (params.start && params.end) {
-	  	map.rtext = `${params.start}~${params.end}`;
+	if (options.start && options.end) {
+	  	params.rtext = `${options.start}~${options.end}`;
 	}
 
-	if (params.start && !params.end) {
+	if (options.start && !options.end) {
 	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
-	  	map.rtext = `${params.start}`;
+	  	params.rtext = `${options.start}`;
 	}
 
-	if (params.end && !params.start) {
+	if (options.end && !options.start) {
   	  	console.warn('Yandex Maps does not support current location, please specify direction\'s start and end.');
-	  	map.rtext = `${params.end}`;
+	  	params.rtext = `${options.end}`;
 	}
 
-	return cleanObject(map);
+	return cleanObject(params);
   };
 
-// The map portion API is defined here essentially
-export const createQueryParameters = (provider, {
-	latitude,
-	longitude,
-	zoom = 15,
-	start = '',
-	end = '',
-	endPlaceId = '',
-	query = '',
-	queryPlaceId = '',
-	navigate = false,
-	travelType = 'drive',
-	mapType = 'standard'
-}) => {
-	validateTravelType(travelType);
-	validateMapType(mapType);
+// Generates a query parameter for the provider specified
+export const createQueryParameters = (options) => {
+	if (options.travelType) {
+		validateTravelType(options.travelType);
+	}
 
-	const formatArguments = {
+	if (options.mapType) {
+		validateMapType(options.mapType);
+	}
+
+	if (options.latitude && options.longitude) {
+		options.coords = geoCordStringify(options.latitude, options.longitude);
+		options.reverseCoords = geoCordStringify(options.longitude, options.latitude);
+	}
+
+	const generateParameters = {
+		apple: createAppleParams,
+		google: createGoogleParams,
+		yandex: createYandexParams,
+	}[options.provider];
+
+	return generateParameters(options);
+};
+
+export default function open(options) {
+	createOpenLink(options)();
+}
+
+// Returns a delayed async function that opens when executed
+export function createOpenLink({ provider, ...options }) {
+	const defaultProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
+	const mapProvider = provider || defaultProvider;
+
+	// Allow override provider, otherwise use the default provider
+	const mapLink = createMapLink({ provider: mapProvider, ...options });
+	return async () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
+}
+
+export function createMapLink(options) {
+	// All Options Defined Here
+	const {
+		provider = 'google',
+		latitude,
+		longitude,
+		zoom,
 		start,
 		end,
 		endPlaceId,
@@ -168,41 +210,10 @@ export const createQueryParameters = (provider, {
 		queryPlaceId,
 		navigate,
 		travelType,
-		zoom
-	}
+		mapType,
+		address
+	} = options;
 
-	if (latitude && longitude) {
-		formatArguments.coords = geoCordStringify(latitude, longitude);
-		formatArguments.reverseCoords = geoCordStringify(longitude, latitude);
-	}
-
-	const generateParameters = {
-		apple: createAppleParams,
-		google: createGoogleParams,
-		yandex: createYandexParams,
-	}[provider];
-
-	return generateParameters(formatArguments);
-};
-
-export default function open(params) {
-	createOpenLink(params)();
-}
-
-// Returns a delayed async function that opens when executed
-export function createOpenLink({ provider, ...params }) {
-	const defaultProvider = (Platform.OS === 'ios') ? 'apple' : 'google';
-	const mapProvider = provider || defaultProvider;
-
-	// Allow override provider, otherwise use the default provider
-	const mapLink = createMapLink({ provider: mapProvider, ...params });
-	return async () => Linking.openURL(mapLink).catch(err => console.error('An error occurred', err));
-}
-
-export function createMapLink({
-	provider = 'google',
-	...params
-}) {
 	// Assume query is first choice
 	const link = {
 		google: 'https://www.google.com/maps/search/?api=1&',
@@ -211,22 +222,22 @@ export function createMapLink({
 	};
 
 	// Display if lat and longitude is specified
-	if (params.latitude && params.longitude) {
+	if (latitude && longitude) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
 
-		// if navigate is navigate with lat and lng params
-		if (params.navigate === true) {
+		// If navigate is navigate with lat and lng params
+		if (navigate === true) {
 			console.warn("Expected 'end' parameter in navigation, defaulting to preview mode.");
-			params.navigate = false;
+			options.navigate = false;
 		}
 	}
 
 	// Directions if start and end is present
-	if (params.end) {
+	if (options.end) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
-	const queryParameters = createQueryParameters(provider, params);
+	const mapQueryParams = createQueryParameters({...options, provider});
 	// Escaped commas cause unusual error with Google map
-    return link[provider] + queryString.stringify(queryParameters).replace(/%2C/g, ',');
+    return link[provider] + queryString.stringify(mapQueryParams).replace(/%2C/g, ',');
 }
