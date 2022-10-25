@@ -151,7 +151,7 @@ createMapLink({ provider: 'yandex', latitude: 10.02134, longitude: -29.21322, zo
 
 ##### Query Property
 The query behavior differs per platform:
-- **Apple Maps**: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match.
+- **Apple Maps**: If `latitude` and `longitude` is provided, this will place a marker with the `query` as a label. If no `latitude` or `longitude` is provided, it will center map to closest query match. This will set a **pin** with label set to the query value.
 - **Google Maps**: Will override `latitude` and `longitude` if present and center map to closest query match. Without a `query`, you may however use `<latitude>,<longitude>` as a string value in the query to have a unnamed marker on the map.
 - **Yandex Maps**: If `latitude` and `longitude` is provided, this will place a point to show the accurate location. If no `latitude` or `longitude` is provided, it will center map to closest query match.
 
