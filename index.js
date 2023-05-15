@@ -227,8 +227,8 @@ export function createMapLink(options) {
 		link.google = 'https://www.google.com/maps/@?api=1&map_action=map&';
 
 		// If navigate is navigate with lat and lng params
-		if (navigate === true) {
-			console.warn("Expected 'end' parameter in navigation, defaulting to preview mode.");
+		if (navigate === true && end === null) {
+			console.warn("Navigation mode set, but no end destination configured, defaulting to preview mode. If you meant to enable navigation for a destination, set the coordinates to the end parameter.");
 			options.navigate = false;
 		}
 	}
