@@ -64,6 +64,11 @@ export const createAppleParams = options => {
 		params.z = 15;
 	}
 
+	// This is undocumented from Apple's documentation, so behavior may not work without notice
+	if (options.waypoints && options.waypoints.length > 0) {
+		params.daddr = [...options.waypoints, options.end];
+	}
+
 	return cleanObject(params);
 }
 
@@ -90,6 +95,7 @@ export const createGoogleParams = options => {
 		travelmode: travelTypeMap[options.travelType],
 		zoom: options.zoom,
 		basemap: baseTypeMap[options.mapType],
+		waypoints: options.waypoints,
 	};
 
 	if (options.mapType === 'transit' || options.mapType === 'hybrid') {
@@ -205,7 +211,8 @@ export function createMapLink(options) {
 		queryPlaceId,
 		navigate,
 		travelType,
-		mapType
+		mapType,
+		waypoints = []
 	} = options;
 
 	// Assume query is first choice
@@ -231,7 +238,14 @@ export function createMapLink(options) {
 		link.google = 'https://www.google.com/maps/dir/?api=1&';
 	}
 
+	const stringifyOptions = {};
+
+	if (provider === 'google') {
+		stringifyOptions.arrayFormat = 'separator';
+		stringifyOptions.arrayFormatSeparator = '|';
+	}
+
 	const mapQueryParams = createQueryParameters({...options, provider});
 	// Escaped commas cause unusual error with Google map
-    return link[provider] + queryString.stringify(mapQueryParams).replace(/%2C/g, ',');
+    return link[provider] + queryString.stringify(mapQueryParams, stringifyOptions).replace(/%2C/g, ',');
 }

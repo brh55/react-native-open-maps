@@ -94,6 +94,7 @@ Creates the raw link for the map.
 | *travelType* | `enumeration` : [`drive`, `walk`,`public_transport`]   | Use this parameter in conjunction with `start` and `end` to determine transportation type. Default is `drive` | `"drive"`                       | All         |
 | *start*      | `string` that geolocation can understand               | The start location that can be interpreted as a geolocation, omit if you want to use current location / "My Location". See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"New York City, New York, NY"` | All         |
 | *end*        | `string` that geolocation can understand.              | The end location that can be interpreted as a geolocation. See [Apple](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1), [Google](https://developers.google.com/maps/documentation/urls/guide#directions-action) and [Yandex](https://yandex.com/dev/yandex-apps-launch/maps/doc/concepts/yandexmaps-web.html#yandexmaps-web__buildroute) docs for more details on how to define geolocations. | `"SOHO, New York, NY"`          | All         |
+| *waypoints*    | `array`: [`address`, `address`] | Define intermediate addresses between a route. | ["San Jose, California", "Campbell, California"]                        | Apple (v16+) and Google       |
 | *endPlaceId* | `string`                                               | End destination with the use of a place ID that uniquely identifies a places. | `ChIJgUbEo8cfqokR5lP9_Wh_DaM`   | Google      |
 | *navigate*   | `boolean`                                              | This is only specific for Google. Yandex and Apple maps will provide directions if a `start ` and `end` is provided. | `true`                          | Google      |
 | *mapType*    | `enum`: [`standard`, `satellite`, `hybrid`, `transit`] | Specifies base map type. Note, `hybrid` is the satellite map with a transit layer, where as `transit` is the standard roadmap with a `transit` layer. | "hybrid"                        | All, except Yandex does not support "hybrid"        |
@@ -127,6 +128,11 @@ createMapLink({ provider: 'yandex', start: '1 Infinite Loop, Cupertino, CA', end
 #### Get directions from here
 ```js
 createMapLink({ provider: 'google', end: 'New York City, NY' })
+```
+
+#### Get directions from here with additional stops (Apple or Google only)
+```js
+createMapLink({ provider: 'google', end: 'East Brunswick, NJ' })
 ```
 
 #### Get directions by walking with a hybrid view (satellite and transit)

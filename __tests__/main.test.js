@@ -129,6 +129,26 @@ describe('Core Functionality', () => {
 				const provider = 'yandex';
 				expect(createMapLink({ provider, start, end })).toEqual(url.yandex + 'rtext=Cupertino~San%20Francisco');
 			});
+		});
+
+		describe('Get directions with waypoints', () => {
+			const start = 'Cupertino';
+			const end = 'San Francisco';
+			const waypoints = ['San Jose, California', 'Campbell, California'];
+
+			test('Apple Maps', () => {
+				expect(createMapLink({ provider, start, end, waypoints })).toEqual(url.apple + 'daddr=San%20Jose,%20California&daddr=Campbell,%20California&daddr=San%20Francisco&saddr=Cupertino');
+			});
+
+			test('Google Maps', () => {
+				const provider = 'google';
+				expect(createMapLink({ provider, start, end, waypoints })).toEqual(url.google.directions + 'destination=San%20Francisco&origin=Cupertino&waypoints=San%20Jose,%20California|Campbell,%20California');
+			});
+
+			test('Yandex Maps', () => {
+				const provider = 'yandex';
+				expect(createMapLink({ provider, start, end, waypoints })).toEqual(url.yandex + 'rtext=Cupertino~San%20Francisco');
+			});
 
 		});
 

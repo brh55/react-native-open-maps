@@ -23,7 +23,8 @@ declare module 'react-native-open-maps' {
     /** Determines whether map should open in preview mode or in navigate mode (with turn-by-turn navigation). This only works with Google maps, other Platforms will provide directions if start and end parameters are present */
     navigate?: boolean
     /** Specifies base map type **/
-    mapType?: 'standard' | 'satellite' | 'hybrid' | 'transit'
+    mapType?: 'standard' | 'satellite' | 'hybrid' | 'transit',
+    waypoints: Array<string>
   }
 
   export function createOpenLink(options: ShowOptions): () => Promise<void>
