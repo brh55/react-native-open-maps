@@ -82,6 +82,9 @@ Creates a delayed invoked function to open the map. This is useful for binding f
 #### `{ createMapLink(options) }`
 Creates the raw link for the map.
 
+#### `{ createQueryParameters(options) }`
+Creates the query parameters for the designated maps provider. Useful if you want to override the base url and perform logic to override it with a native base URL.
+
 #### options
 | Properties   | Type                                                   | Description                                                  | Example                         | Map Support |
 | ------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------- | ----------- |
