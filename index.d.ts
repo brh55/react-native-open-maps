@@ -24,7 +24,7 @@ declare module 'react-native-open-maps' {
     navigate?: boolean
     /** Specifies base map type **/
     mapType?: 'standard' | 'satellite' | 'hybrid' | 'transit',
-    waypoints: Array<string>
+    waypoints?: Array<string>
   }
 
   export function createOpenLink(options: ShowOptions): () => Promise<void>
